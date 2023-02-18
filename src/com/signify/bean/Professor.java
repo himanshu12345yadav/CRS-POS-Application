@@ -2,7 +2,7 @@ package com.signify.bean;
 
 import java.util.Date;
 
-public class Professor {
+public class Professor extends User {
 	private String department , designation;
 	private Date doj;
 

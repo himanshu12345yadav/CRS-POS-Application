@@ -5,8 +5,8 @@ import java.util.Scanner;
 import com.signify.service.StudentService;
 
 public class CRSStudentMenu {
-	private String prompt = "PRESS 1 -> TO VIEW GRADES\n"
-			+ "PRESS 2 -> TO VIEW GRADE FOR A PARTICULAR COURSE\n"
+	private String prompt = "\nSTUDENT MENU\n--------------\nPRESS 1 -> TO VIEW GRADES\n"
+			+ "PRESS 2 -> TO VIEW GRADE FOR A COURSE\n"
 			+ "PRESS 3 -> TO VIEW REGISTERED COURSE\n"
 			+ "PRESS 4 -> TO ADD COURSE\n"
 			+ "PRESS 5 -> TO DROP A COURSE\n"

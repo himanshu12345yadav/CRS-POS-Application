@@ -2,7 +2,19 @@ package com.signify.bean;
 
 public class User {
 	private int userId;
-	private String name , address , role;
+	private String username , password , name , address , role;
+	public String getUsername() {
+		return username;
+	}
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
 	public String getRole() {
 		return role;
 	}

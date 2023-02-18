@@ -4,7 +4,7 @@ import java.util.Scanner;
 import com.signify.service.AdminService;
 
 public class CRSAdminMenu {
-	private String prompt = "PRESS 1 -> FOR APPROVING STUDENT \n"
+	private String prompt = "ADMIN MENU\n------------\nPRESS 1 -> FOR APPROVING STUDENT \n"
 			+ "PRESS 2 -> TO ADD PROFESSOR \n"
 			+ "PRESS 3 -> TO GENERATE REPORT CARD \n"
 			+ "PRESS 4 -> TO ASSIGN A PROFESSOR\n"
@@ -18,10 +18,9 @@ public class CRSAdminMenu {
 		boolean flag = true;
 		Scanner sc = new Scanner(System.in);
 		AdminService as = new AdminService();
-		int input;
 		
 		do {
-			input = sc.nextInt();
+			int input = sc.nextInt();
 			
 			switch(input) {
 			case 1 :

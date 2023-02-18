@@ -5,90 +5,103 @@ import java.util.Scanner;
 import com.signify.service.UserService;
 
 public class CRSApplicationMenu {
-	private static String prompt = "\n======================\n"
-			+ "MAIN MENU\n"
+	private static String prompt = "\nMAIN MENU\n---------\n"
 			+ "PRESS 1 TO LOGIN\n"
 			+ "PRESS 2 TO REGISTRATION\n"
-			+ "PRESS 3 FOR UPDATE PASSWORD\n"
-			+ "PRESS 4 EXIT\n";
+			+ "PRESS 3 TO UPDATE PASSWORD\n"
+			+ "PRESS 4 TO EXIT\n";
 	
 	public void loginHandler() {
 		{
 			Scanner sc = new Scanner(System.in);
-			System.out.println("ENTER USERNAME");
+			System.out.print("ENTER USERNAME :");
 			String username = sc.nextLine();
-			System.out.println("ENTER PASSWORD");
+			System.out.print("ENTER PASSWORD :");
 			String password = sc.nextLine();
-			System.out.println("ENTER ROLE");
-			String role = sc.nextLine();
+			System.out.print("ENTER ROLE :");
+			String role = sc.nextLine().toLowerCase();
 			
 			if(role.equals("admin")) {
 				UserService adminService = new UserService();
-				adminService.login(username , password);
-				CRSAdminMenu adminMenu = new CRSAdminMenu();
-				adminMenu.displayAdminMenu();
+				if(adminService.login(username , password , role)) {
+					CRSAdminMenu adminMenu = new CRSAdminMenu();
+					adminMenu.displayAdminMenu();					
+				}
 			}
 			else if(role.equals("student")) {
 				UserService studentService = new UserService();
-				studentService.login(username , password);
-				CRSStudentMenu studentMenu = new CRSStudentMenu();
-				studentMenu.displayStudentMenu();
+				if(studentService.login(username , password , role)) {
+					CRSStudentMenu studentMenu = new CRSStudentMenu();
+					studentMenu.displayStudentMenu();					
+				}
 			}
 			else if(role.equals("professor")) {
 				UserService professorService = new UserService();
-				professorService.login(username , password);
-				CRSProfessorMenu profMenu = new CRSProfessorMenu();
-				profMenu.displayProfessorMenu();
+				if(professorService.login(username , password , role)) {
+					CRSProfessorMenu profMenu = new CRSProfessorMenu();
+					profMenu.displayProfessorMenu();					
+				}
 			}
 			else {
-				System.out.println("ERROR : Role can only be student , professor or admin");
+				System.out.println("ERROR TYPE ROLE : Role can only be student , professor or admin");
 			}
 		}
 	}
 	public void registerStudent() {
 		Scanner sc = new Scanner(System.in);
-		System.out.println("ENTER USERNAME");
+		System.out.print("ENTER USERNAME :");
 		String username = sc.nextLine();
-		System.out.println("ENTER PASSWORD");
+		System.out.print("ENTER PASSWORD :");
 		String password = sc.nextLine();
+		System.out.print("ENTER NAME :");
+		String name = sc.nextLine();
+		System.out.print("ENTER ADDRESS :");
+		String address = sc.nextLine();
+		System.out.print("ENTER ROLE :");
+		String role = sc.nextLine().toLowerCase();
+		
+		if(!role.equals("student") && !role.equals("professor") && !role.equals("admin")) {
+			System.out.println("\n⚠ Role can only be student , professor or admin");
+			return;
+		}
 		
 		UserService svc = new UserService();
-		svc.register(username, password);
+		svc.register(username, password , name , address , role);
 	}
 	public void updatePassword() {
 		Scanner sc = new Scanner(System.in);
-		System.out.println("ENTER USERNAME ");
+		System.out.print("ENTER USERNAME :");
 		String username = sc.nextLine();
-		System.out.println("ENTER NEW PASSWORD ");
+		System.out.print("ENTER CURRENT PASSWORD :");
 		String password = sc.nextLine();
+		System.out.print("ENTER NEW PASSWORD :");
+		String newPassword = sc.nextLine();
 		UserService svc = new UserService();
-		svc.updatePassword(username , password);
+		svc.updatePassword(username , password , newPassword);
 	}
 	public static void main(String[] args) {
 	
-		System.out.println("WELCOME TO THE CRS APPLICATION");
+		System.out.println("WELCOME TO THE CRS APPLICATION\n==============================");
 		Scanner sc = new Scanner(System.in);
 		boolean flag = true;
-		int type;
 		CRSApplicationMenu crs = new CRSApplicationMenu();
 		do {
 			System.out.println(prompt);
-			type = sc.nextInt();
+			String type = sc.next();
 			
 			switch(type) {
-				case 1:
-					// handle login
+				case "1":
 					crs.loginHandler();
 					break;
-				case 2:
+				case "2":
 					crs.registerStudent();
 					break;
-				case 3:
+				case "3":
 					crs.updatePassword();
 					break;
-				case 4:
+				case "4":
 					flag = false;
-					System.out.println("BYE");
+					System.out.println("👋 BYE");
 					return;
 				default:
 					System.out.println("WRONG INPUT : TRY AGAIN");

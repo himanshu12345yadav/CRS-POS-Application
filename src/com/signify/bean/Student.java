@@ -1,6 +1,6 @@
 package com.signify.bean;
 
-public class Student {
+public class Student extends User {
 	private int studentId;
 	private String branch , batch;
 	public String getBatch() {
