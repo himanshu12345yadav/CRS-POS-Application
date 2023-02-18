@@ -1,34 +1,25 @@
 package com.signify.service;
 
-import java.util.Scanner;
 
-public abstract class UserService implements UserInterface {
-	public void register() {
-		Scanner sc = new Scanner(System.in);
-		
-		String username = sc.next();
-		String password = sc.next();
-		String role = sc.next();
-		
-		if(role == "admin") {
-			System.out.println("WELCOME TO ADMIN");
-		}
-		else if(role == "student") {
-			System.out.println("WELCOME TO STUDENT");
-		}
-		else if(role == "professor") {
-			System.out.println("WELCOME TO PROFESSOR");
-		}
-		else {
-			System.out.println("TRY AGAIN!");
-		}
-		
-		sc.close();
+public class UserService implements UserInterface {
+	@Override
+	public void login(String username , String password) {
+		System.out.println("\nUser Logged In");
 	}
+	@Override
+	public void logout() {
+		System.out.println("\nUser Logged Out");
+	}
+	@Override
+	public void register(String username , String password) {
+		System.out.println("User Registered");
+	}
+	@Override
 	public void updateDetails() {
-		
+		System.out.println("Details Updated");
 	}
-	public void updatePassword() {
-		
+	@Override
+	public void updatePassword(String username , String password) {
+		System.out.println("Password updated");
 	}
 }

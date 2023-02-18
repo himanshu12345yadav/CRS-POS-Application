@@ -10,7 +10,8 @@ public class CRSAdminMenu {
 			+ "PRESS 4 -> TO ASSIGN A PROFESSOR\n"
 			+ "PRESS 5 -> TO ADD COURSE \n"
 			+ "PRESS 6 -> TO REMOVE COURSE\n"
-			+ "PRESS 7 -> TO VIEW COURSES\n";
+			+ "PRESS 7 -> TO VIEW COURSES\n"
+			+ "PRESS 8 -> GO TO MAIN MENU\n";
 	
 	public void displayAdminMenu() {
 		System.out.println(prompt);
@@ -24,26 +25,28 @@ public class CRSAdminMenu {
 			
 			switch(input) {
 			case 1 :
-				as.approveStudent();
+				as.approveStudent(1);
 				break;
 			case 2 :
-				as.addProfessor();
+				as.addProfessor(10);
 				break;
 			case 3 :
-				as.generateReportCard(input, input, input);
+				as.generateReportCard(1, 1, 1);
 				break;
 			case 4 :
-				as.addProfessor();
+				as.assignProfessorToCourse(1, 10);
 				break;
 			case 5 :
-				as.addCourse(input);
+				as.addCourse(10);
 				break;
 			case 6 :
-				as.removeCourse(input);
+				as.removeCourse(10);
 				break;
 			case 7 : 
-				as.viewCourses();
+				as.viewCourseDetails(10);
 				break;
+			case 8:
+				return;
 			default:
 				System.out.println("Wrong input : Try again");
 			}
