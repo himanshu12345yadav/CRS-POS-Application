@@ -1,6 +1,6 @@
 package com.signify.bean;
 
-public class Card {
+public class Card extends Payment {
 	private int cardNumber;
 	private String cardType;
 	public int getCardNumber() {

@@ -25,7 +25,9 @@ public class CRSAdminMenu {
 			
 			switch(input) {
 			case 1 :
-				as.approveStudent("1");
+				System.out.print("Enter Student Id : ");
+				String studentId = sc.next();
+				as.approveStudent(studentId);
 				break;
 			case 2 :
 				System.out.print("Enter Professor Id : ");
@@ -33,7 +35,13 @@ public class CRSAdminMenu {
 				as.addProfessor(profId);
 				break;
 			case 3 :
-				as.generateReportCard("1", "1", 1);
+				System.out.print("Enter Student Id : ");
+				String stuId = sc.next();
+				System.out.println("Enter Course Id : ");
+				String courseId = sc.next();
+				System.out.println("Enter Semester : ");
+				Integer semester = sc.nextInt();
+				as.generateReportCard(stuId, courseId, semester);
 				break;
 			case 4 :
 				System.out.println("Professor Id : ");

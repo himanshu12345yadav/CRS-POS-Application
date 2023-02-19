@@ -3,6 +3,13 @@ package com.signify.bean;
 public class Student extends User {
 	private int studentId;
 	private String branch , batch;
+	boolean isApproved;
+	public boolean isApproved() {
+		return isApproved;
+	}
+	public void setApproved(boolean isApproved) {
+		this.isApproved = isApproved;
+	}
 	public String getBatch() {
 		return batch;
 	}

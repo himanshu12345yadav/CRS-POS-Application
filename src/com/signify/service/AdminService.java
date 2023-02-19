@@ -1,12 +1,32 @@
 package com.signify.service;
 
+import java.util.HashSet;
+import java.util.Iterator;
+
 import com.signify.bean.Course;
+import com.signify.bean.RegisteredCourse;
+import com.signify.bean.Student;
 import com.signify.collection.CourseData;
+import com.signify.collection.StudentCourse;
+import com.signify.collection.UserData;
 
 public class AdminService extends UserService implements AdminInterface {
 	@Override
 	public void generateReportCard(String studentId , String courseId , int semester) {
-		System.out.println("Report card generated");
+		System.out.println("Added grades");
+		HashSet<RegisteredCourse> course = StudentCourse.regCourses.getOrDefault(studentId , null);
+		
+		if(course == null) {
+			System.out.println("Wrong Student Id ");
+			return;
+		}
+		System.out.println("Student Report Card");
+		Iterator<RegisteredCourse> crs = course.iterator();
+		
+		while(crs.hasNext()) {
+			RegisteredCourse reportcard = crs.next();
+			System.out.println("Course ID : " + reportcard.getName() + "\nCourse Code" + reportcard.getCourseCode() + "\nCourse Grades: " + reportcard.getGrade());
+		}
 	}
 	@Override
 	public void addCourse(String courseCode , String name , boolean isOffered , String instructor) {
@@ -30,6 +50,14 @@ public class AdminService extends UserService implements AdminInterface {
 	@Override
 	public void approveStudent(String studentId) {
 		System.out.println("Student with Student ID approved -> " + studentId);
+		Student usr = (Student)UserData.users.getOrDefault(studentId , null);
+		
+		if(usr == null) {
+			System.out.println("User Not Registered");
+			return;
+		}
+		usr.setApproved(true);
+		System.out.println("Student Approved for Login");
 	}
 	@Override
 	public void addProfessor(String professorId) {

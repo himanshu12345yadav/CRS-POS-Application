@@ -1,6 +1,6 @@
 package com.signify.bean;
 
-public class Cheque {
+public class Cheque extends Payment {
 	private String bankName;
 	private int chequeNumber;
 	public String getBankName() {

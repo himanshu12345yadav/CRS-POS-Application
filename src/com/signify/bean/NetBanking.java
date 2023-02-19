@@ -1,6 +1,6 @@
 package com.signify.bean;
 
-public class NetBanking {
+public class NetBanking extends Payment {
 	private String modeOfTransfer , IFSCcode;
 	private int accountNumber;
 	public String getModeOfTransfer() {

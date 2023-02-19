@@ -13,6 +13,21 @@ public class CRSStudentMenu {
 			+ "PRESS 6 -> TO PAY FEES\n"
 			+ "PRESS 7 -> GO TO MAIN MENU";
 	
+	public void handleFees() {
+		Scanner sc = new Scanner(System.in);
+		int mode = sc.nextInt();
+		
+		if(mode == 1) {
+			// handle online fees
+		}
+		else if(mode == 2) {
+			// handle offline fees
+		}
+		else {
+			System.out.println("Invalid Input");
+			return;
+		}
+	}
 	public void displayStudentMenu() {
 		System.out.println(prompt);
 		boolean flag = true;
@@ -38,7 +53,9 @@ public class CRSStudentMenu {
 			case 4 :
 				System.out.print("Enter Course Id to Add :");
 				String addCourseId = sc.next();
-				ss.addCourse(addCourseId);
+				System.out.print("Enter Semester :");
+				String semester = sc.next();
+				ss.addCourse(addCourseId , semester);
 				break;
 			case 5 :
 				System.out.print("Enter Course Id to Drop :");
@@ -46,7 +63,9 @@ public class CRSStudentMenu {
 				ss.dropCourse(dropCourseId);
 				break;
 			case 6 :
-				ss.payFees();
+				System.out.println("Paying Fees");
+				System.out.println("SELECT THE MODE OF PAYMENT\nPRESS 1 FOR ONLINE \n PRESS 2 FOR OFFLINE");
+				handleFees();
 				break;
 			case 7:
 				return;

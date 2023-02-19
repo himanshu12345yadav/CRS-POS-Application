@@ -10,6 +10,7 @@ import com.signify.collection.StudentRegistered;
 import com.signify.collection.UserSession;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Scanner;
 
 public class StudentService extends UserService implements StudentInterface {
 	@Override
@@ -38,7 +39,7 @@ public class StudentService extends UserService implements StudentInterface {
 		}
 	}
 	@Override
-	public void addCourse(String courseId) {
+	public void addCourse(String courseId , String semester) {
 		Course crs = CourseData.courses.getOrDefault(courseId, null);
 		if(crs == null) {
 			System.out.println("This Course is not provided : \n");
@@ -77,7 +78,8 @@ public class StudentService extends UserService implements StudentInterface {
 	}
 	@Override
 	public void payFees() {
-		System.out.println("Fees is paid");
+		
+		
 	}
 	@Override
 	public void viewGrade(String courseId) {
