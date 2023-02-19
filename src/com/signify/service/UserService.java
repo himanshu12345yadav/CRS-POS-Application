@@ -1,6 +1,7 @@
 package com.signify.service;
 
 import com.signify.bean.User;
+import com.signify.collection.UserSession;
 import com.signify.collection.UserData;
 
 public class UserService implements UserInterface {
@@ -8,6 +9,7 @@ public class UserService implements UserInterface {
 	public boolean login(String username , String password , String role) {
 		if(UserData.users.containsKey(username) && UserData.users.get(username).getPassword().equals(password) && UserData.users.get(username).getRole().equals(role)) {
 			System.out.println("\n✓ User Logged In");
+			UserSession.user = UserData.users.get(username);
 			return true;
 		}
 		else {
@@ -17,6 +19,7 @@ public class UserService implements UserInterface {
 	}
 	@Override
 	public void logout() {
+		UserSession.user = null;
 		System.out.println("\n✓ User Logged Out\n_________________________");
 	}
 	@Override

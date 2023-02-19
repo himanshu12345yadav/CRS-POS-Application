@@ -1,12 +1,12 @@
 package com.signify.service;
 
 public interface AdminInterface {
-	public void approveStudent(int studentId);
-	public void addProfessor(int professorId);
-	public void generateReportCard(int studentId , int courseId , int semester);
-	public void assignProfessorToCourse(int professorId , int courseId);
-	public void addCourse(int courseId);
-	public void removeCourse(int courseId);
-	public void viewCourseDetails(int courseId);
-	public double calculateCpi(int studentId);
+	public void approveStudent(String studentId);
+	public void addProfessor(String professorId);
+	public void generateReportCard(String studentId , String courseId , int semester);
+	public void assignProfessorToCourse(String professorId , String courseId);
+	public void addCourse(String courseCode , String name , boolean isOffered , String instructor);
+	public void removeCourse(String courseId);
+	public void viewCourseDetails(String courseId);
+	public double calculateCpi(String studentId);
 }

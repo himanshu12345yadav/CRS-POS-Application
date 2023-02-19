@@ -28,16 +28,22 @@ public class CRSStudentMenu {
 				ss.viewGrades();
 				break;
 			case 2 :
-				ss.viewGrade(10);
+				System.out.println("Enter Course Id :");
+				String courseId = sc.next();
+				ss.viewGrade(courseId);
 				break;
 			case 3 :
 				ss.viewRegisterCourses();
 				break;
 			case 4 :
-				ss.addCourse();
+				System.out.print("Enter Course Id to Add :");
+				String addCourseId = sc.next();
+				ss.addCourse(addCourseId);
 				break;
 			case 5 :
-				ss.dropCourse(10);
+				System.out.print("Enter Course Id to Drop :");
+				String dropCourseId = sc.next();
+				ss.dropCourse(dropCourseId);
 				break;
 			case 6 :
 				ss.payFees();

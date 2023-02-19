@@ -22,10 +22,18 @@ public class CRSProfessorMenu {
 			
 			switch(input) {
 			case 1 :
-				profServ.viewEnrolledStudents();
+				System.out.println("Enter course id ");
+				String courseId = sc.next();
+				profServ.viewEnrolledStudents(courseId);
 				break;
 			case 2 :
-				profServ.addGrade();
+				System.out.println("Enter Student Id : ");
+				String studentId = sc.next();
+				System.out.println("Enter Course Code : ");
+				String courseCode = sc.next();
+				System.out.println("Enter Grade");
+				String grade = sc.next();
+				profServ.addGrade(studentId , courseCode , grade);
 				break;
 			case 3:
 				return;
