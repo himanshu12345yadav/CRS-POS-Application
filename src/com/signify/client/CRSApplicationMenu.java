@@ -2,6 +2,8 @@ package com.signify.client;
 
 import java.util.Scanner;
 
+import com.signify.bean.User;
+import com.signify.collection.UserData;
 import com.signify.service.UserService;
 
 public class CRSApplicationMenu {
@@ -47,7 +49,8 @@ public class CRSApplicationMenu {
 			}
 		}
 	}
-	public void registerStudent() {
+	public void registerHandler() {
+		// allow registration for student
 		Scanner sc = new Scanner(System.in);
 		System.out.print("ENTER USERNAME :");
 		String username = sc.nextLine();
@@ -60,8 +63,8 @@ public class CRSApplicationMenu {
 		System.out.print("ENTER ROLE :");
 		String role = sc.nextLine().toLowerCase();
 		
-		if(!role.equals("student") && !role.equals("professor") && !role.equals("admin")) {
-			System.out.println("\n⚠ Role can only be student , professor or admin");
+		if(!role.equals("student")) {
+			System.out.println("\n⚠ Only Student can Register");
 			return;
 		}
 		
@@ -82,6 +85,7 @@ public class CRSApplicationMenu {
 	public static void main(String[] args) {
 	
 		System.out.println("WELCOME TO THE CRS APPLICATION\n==============================");
+		createAdmin();
 		Scanner sc = new Scanner(System.in);
 		boolean flag = true;
 		CRSApplicationMenu crs = new CRSApplicationMenu();
@@ -94,7 +98,7 @@ public class CRSApplicationMenu {
 					crs.loginHandler();
 					break;
 				case "2":
-					crs.registerStudent();
+					crs.registerHandler();
 					break;
 				case "3":
 					crs.updatePassword();
@@ -108,5 +112,15 @@ public class CRSApplicationMenu {
 					break;
 			}
 		} while (flag);
+	}
+	private static void createAdmin() {
+		User admin = new User();
+		admin.setName("admin");
+		admin.setAddress("admin");
+		admin.setPassword("admin");
+		admin.setUserId(admin.hashCode());
+		admin.setUsername("admin");
+		admin.setRole("admin");
+		UserData.users.put(admin.getUsername(), admin);
 	}
 }

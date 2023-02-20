@@ -1,7 +1,7 @@
 package com.signify.service;
 
 public interface AdminInterface {
-	public void approveStudent(String studentId);
+	public void approveStudent(String studentUsername);
 	public void addProfessor(String professorId);
 	public void generateReportCard(String studentId , String courseId , int semester);
 	public void assignProfessorToCourse(String professorId , String courseId);

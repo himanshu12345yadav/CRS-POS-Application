@@ -48,9 +48,8 @@ public class AdminService extends UserService implements AdminInterface {
 		}
 	}
 	@Override
-	public void approveStudent(String studentId) {
-		System.out.println("Student with Student ID approved -> " + studentId);
-		Student usr = (Student)UserData.users.getOrDefault(studentId , null);
+	public void approveStudent(String studentUsername) {
+		Student usr = (Student)UserData.users.getOrDefault(studentUsername , null);
 		
 		if(usr == null) {
 			System.out.println("User Not Registered");

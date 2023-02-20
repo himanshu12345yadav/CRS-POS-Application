@@ -2,22 +2,23 @@ package com.signify.client;
 
 import java.util.Scanner;
 
+import com.signify.collection.UserSession;
 import com.signify.service.ProfessorInterface;
 import com.signify.service.ProfessorService;
 
 public class CRSProfessorMenu {
 	private String prompt = "\nPROFESSOR MENU\n-----------------\nPRESS 1 -> FOR VIEWING ENROLLED STUDENTS\n"
-			+ "PRESS 2 -> TO ADD GRADES"
-			+ "PRESS 3 -> GO TO MAIN MENU\n";
+			+ "PRESS 2 -> TO ADD GRADES\n"
+			+ "PRESS 3 -> LOGOUT \n";
 	
 	public void displayProfessorMenu() {
-		System.out.println(prompt);
 		boolean flag = true;
 		Scanner sc = new Scanner(System.in);
 		ProfessorInterface profServ = new ProfessorService();
 		int input;
 		
 		do {
+			System.out.println(prompt);
 			input = sc.nextInt();
 			
 			switch(input) {
@@ -36,6 +37,7 @@ public class CRSProfessorMenu {
 				profServ.addGrade(studentId , courseCode , grade);
 				break;
 			case 3:
+				UserSession.user = null;
 				return;
 			default:
 				System.out.println("Wrong input : Try again");
