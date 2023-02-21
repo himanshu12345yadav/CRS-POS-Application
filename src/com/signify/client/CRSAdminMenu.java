@@ -50,8 +50,7 @@ public class CRSAdminMenu {
 				String name = sc.next();
 				System.out.print("ENTER ADDRESS :");
 				String address = sc.next();
-				UserService svc = new UserService();
-				svc.register(username, password , name , address , "professor");
+				as.addProfessor(username, password, name, address);
 				break;
 			case 3 :
 				System.out.print("Enter Student Id : ");
@@ -97,6 +96,5 @@ public class CRSAdminMenu {
 				System.out.println("Wrong input : Try again");
 			}
 		} while (flag);
-	}
-	
+	}	
 }

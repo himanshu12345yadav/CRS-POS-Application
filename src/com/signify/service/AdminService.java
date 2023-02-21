@@ -2,6 +2,7 @@ package com.signify.service;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 
 import com.signify.bean.Course;
 import com.signify.bean.RegisteredCourse;
@@ -36,6 +37,12 @@ public class AdminService extends UserService implements AdminInterface {
 		course.setOffered(isOffered);
 		course.setInstructor(instructor);
 		CourseData.courses.put(courseCode, course);
+		
+		System.out.println("Course Added Successfully");
+		
+		for(Map.Entry<String, Course> i : CourseData.courses.entrySet()) {
+			System.out.println("Course Code : " + i.getValue().getName() + "\tCourse Name : " + i.getValue().getCourseCode());
+		}
 	}
 	@Override
 	public void removeCourse(String courseId) {
@@ -59,8 +66,10 @@ public class AdminService extends UserService implements AdminInterface {
 		System.out.println("Student Approved for Login");
 	}
 	@Override
-	public void addProfessor(String professorId) {
-		System.out.println("Professor is added");
+	public void addProfessor(String username , String password , String name , String address) {
+		UserService svc = new UserService();
+		svc.register(username, password , name , address , "professor");
+		System.out.println("Professor added successfully");
 	}
 	@Override
 	public void assignProfessorToCourse(String professorId, String courseId) {
