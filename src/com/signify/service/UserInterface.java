@@ -1,8 +1,10 @@
 package com.signify.service;
 
+import com.signify.bean.User;
+
 public interface UserInterface {
-	public boolean login(String username , String password , String role);
+	public User login(String username , String password);
 	public void logout();
-	public void register(String username , String password , String name , String address , String role);
+	public void register(User usr);
 	public void updatePassword(String username , String password , String newPassword);
 }

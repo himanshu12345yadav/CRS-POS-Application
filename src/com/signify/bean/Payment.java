@@ -9,6 +9,14 @@ public class Payment {
 	public boolean isOnline() {
 		return isOnline;
 	}
+	public Payment(int studentId, String referenceId, float amount, boolean status, boolean isOnline) {
+		super();
+		this.studentId = studentId;
+		this.referenceId = referenceId;
+		this.amount = amount;
+		this.status = status;
+		this.isOnline = isOnline;
+	}
 	public void setOnline(boolean isOnline) {
 		this.isOnline = isOnline;
 	}

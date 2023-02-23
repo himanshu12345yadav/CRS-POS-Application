@@ -1,31 +1,40 @@
 package com.signify.bean;
 
 public class RegisteredCourse extends Course {
-	private String courseCode , grade;
+
+	private String courseCode, grade;
 	private int semester;
-	private int studentId;
+	private String studentId;
+
 	public String getCourseCode() {
 		return courseCode;
 	}
+
 	public void setCourseCode(String courseCode) {
 		this.courseCode = courseCode;
 	}
+
 	public String getGrade() {
 		return grade;
 	}
+
 	public void setGrade(String grade) {
 		this.grade = grade;
 	}
+
 	public int getSemester() {
 		return semester;
 	}
+
 	public void setSemester(int semester) {
 		this.semester = semester;
 	}
-	public int getStudentId() {
+
+	public String getStudentId() {
 		return studentId;
 	}
-	public void setStudentId(int studentId) {
+
+	public void setStudentId(String studentId) {
 		this.studentId = studentId;
 	}
 }

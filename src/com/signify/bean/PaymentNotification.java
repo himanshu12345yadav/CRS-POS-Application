@@ -12,6 +12,13 @@ public class PaymentNotification {
 	public int getReferenceId() {
 		return referenceId;
 	}
+	public PaymentNotification(int studentId, int referenceId, int notificationId, String notificationMessage) {
+		super();
+		this.studentId = studentId;
+		this.referenceId = referenceId;
+		this.notificationId = notificationId;
+		this.notificationMessage = notificationMessage;
+	}
 	public void setReferenceId(int referenceId) {
 		this.referenceId = referenceId;
 	}

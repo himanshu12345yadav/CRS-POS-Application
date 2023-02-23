@@ -1,100 +1,108 @@
 package com.signify.client;
 
-import java.util.Map;
+import java.util.List;
 import java.util.Scanner;
 
+import com.signify.bean.Admin;
+import com.signify.bean.Course;
+import com.signify.bean.Professor;
 import com.signify.bean.Student;
-import com.signify.bean.User;
-import com.signify.collection.UserData;
 import com.signify.collection.UserSession;
+import com.signify.constants.DBConstants;
+import com.signify.reader.UserRegistration;
 import com.signify.service.AdminService;
 import com.signify.service.UserService;
 
 public class CRSAdminMenu {
-	private String prompt = "\nADMIN MENU\n------------\nPRESS 1 -> FOR APPROVING STUDENT \n"
-			+ "PRESS 2 -> TO ADD PROFESSOR \n"
-			+ "PRESS 3 -> TO GENERATE REPORT CARD \n"
-			+ "PRESS 4 -> TO ASSIGN A PROFESSOR\n"
-			+ "PRESS 5 -> TO ADD COURSE \n"
-			+ "PRESS 6 -> TO REMOVE COURSE\n"
-			+ "PRESS 7 -> TO VIEW COURSES\n"
-			+ "PRESS 8 -> LOGOUT\n";
-	
+	private String prompt = "\nADMIN MENU\n------------\n1. -> FOR APPROVING STUDENT \n" + "2. -> TO ADD PROFESSOR \n"
+			+ "3. -> TO ADD NEW ADMIN\n" + "4. -> TO GENERATE REPORT CARD \n" + "5. -> TO ASSIGN A PROFESSOR\n"
+			+ "6. -> TO ADD COURSE \n" + "7. -> TO REMOVE COURSE\n" + "8. -> TO VIEW COURSES\n" + "9. -> LOGOUT\n";
+
 	public void displayAdminMenu() {
 		boolean flag = true;
 		Scanner sc = new Scanner(System.in);
 		AdminService as = new AdminService();
-		
+
 		do {
 			System.out.println(prompt);
 			int input = sc.nextInt();
-			
-			switch(input) {
-			case 1 :
+
+			switch (input) {
+			case 1:
 				System.out.println("List of Unapproved Students");
-				for(Map.Entry<String , User> i : UserData.users.entrySet()) {
-					if(i.getValue() instanceof Student && ((Student) i.getValue()).isApproved() == false) {
-						System.out.println("Student Id : " + i.getValue().getUsername() + "\tStudent Name : " + i.getValue().getName());
-					}
+				List<Student> students = as.getUnapprovedStudents();
+
+				for (Student i : students) {
+					System.out.printf("%s %-10s %s", i.getUserId(), i.getUsername(), i.getName());
 				}
+				System.out.printf("1. To Approve all students %n 2. To Approve by Id %n");
+				int choice = Integer.parseInt(sc.nextLine());
+				switch (choice) {
+				case 1:
+					as.approveAllStudents();
+					break;
+				case 2:
+					System.out.print("Enter Student id : ");
+					String studentId = sc.nextLine();
+					as.approveStudentById(studentId);
+					break;
+				default:
+					System.out.println("Invalid Input Received");
+					break;
+				}
+				break;
+			case 2:
+				UserRegistration profUser = new UserRegistration();
+				Professor prof = (Professor) profUser.registerUser(DBConstants.PROFESSOR_ROLE_ID);
+				as.addProfessor(prof);
+				break;
+			case 3:
+				UserRegistration adminUser = new UserRegistration();
+				Admin admin = (Admin) adminUser.registerUser(DBConstants.ADMIN_ROLE_ID);
+				as.addAdmin(admin);
+				break;
+			case 4:
 				System.out.print("Enter Student Id : ");
-				String studentId = sc.next();
-				as.approveStudent(studentId);
+				String stuId = sc.nextLine();
+				as.generateReportCard(stuId);
 				break;
-			case 2 :
-				System.out.print("ENTER USERNAME :");
-				String username = sc.next();
-				System.out.print("ENTER PASSWORD :");
-				String password = sc.next();
-				System.out.print("ENTER NAME :");
-				String name = sc.next();
-				System.out.print("ENTER ADDRESS :");
-				String address = sc.next();
-				as.addProfessor(username, password, name, address);
-				break;
-			case 3 :
-				System.out.print("Enter Student Id : ");
-				String stuId = sc.next();
-				System.out.println("Enter Course Id : ");
-				String courseId = sc.next();
-				System.out.println("Enter Semester : ");
-				Integer semester = sc.nextInt();
-				as.generateReportCard(stuId, courseId, semester);
-				break;
-			case 4 :
+			case 5:
 				System.out.println("Professor Id : ");
-				String courseProfId = sc.next();
+				String courseProfId = sc.nextLine();
 				System.out.println("Course Id : ");
-				String CourseId = sc.next();
-				as.assignProfessorToCourse(CourseId , courseProfId);
+				String CourseId = sc.nextLine();
+				as.assignProfessorToCourse(CourseId, courseProfId);
 				break;
-			case 5 :
+			case 6:
 				System.out.print("Course Code :");
-				String courseCode = sc.next();
-				System.out.print("Name : ");
-				String courseName = sc.next();
-				System.out.print("isOffered : ");
-				boolean isOffered = sc.nextBoolean();
-				System.out.print("Intructor : ");
-				String instructor = sc.next();
-				as.addCourse(courseCode , courseName , isOffered , instructor);
+				String courseCode = sc.nextLine();
+				System.out.print("Course Name : ");
+				String courseName = sc.nextLine();
+				System.out.print("Course Instructor");
+				String instructor = sc.nextLine();
+				System.out.print("Course Fee");
+				Double fee = Double.parseDouble(sc.nextLine());
+
+				Course course = new Course(courseCode, courseName, instructor, fee);
+				as.addCourse(course);
 				break;
-			case 6 :
+			case 7:
 				System.out.print("Course Code : ");
-				String removeCourseCode = sc.next();
+				String removeCourseCode = sc.nextLine();
 				as.removeCourse(removeCourseCode);
 				break;
-			case 7 : 
-				System.out.println("Course Code : ");
-				String courseCodeDetails = sc.next();
-				as.viewCourseDetails(courseCodeDetails);
-				break;
 			case 8:
+				System.out.println("Course Code : ");
+				String courseCodeDetails = sc.nextLine();
+				Course crs = as.getCourseDetails(courseCodeDetails);
+				System.out.printf("Course Name %-5s %s Course Code %-5s %s Instructor %-5s %s Fee %-5s %f", crs.getName() , crs.getCourseCode() , crs.getInstructor() , crs.getCoursefee());
+				break;
+			case 9:
 				UserSession.user = null;
 				return;
 			default:
 				System.out.println("Wrong input : Try again");
 			}
 		} while (flag);
-	}	
+	}
 }

@@ -7,9 +7,9 @@ import com.signify.service.ProfessorInterface;
 import com.signify.service.ProfessorService;
 
 public class CRSProfessorMenu {
-	private String prompt = "\nPROFESSOR MENU\n-----------------\nPRESS 1 -> FOR VIEWING ENROLLED STUDENTS\n"
-			+ "PRESS 2 -> TO ADD GRADES\n"
-			+ "PRESS 3 -> LOGOUT \n";
+	private String prompt = "\nPROFESSOR MENU\n-----------------\n1. -> FOR VIEWING ENROLLED STUDENTS\n"
+			+ "2. -> TO ADD GRADES\n"
+			+ "3. -> LOGOUT \n";
 	
 	public void displayProfessorMenu() {
 		boolean flag = true;

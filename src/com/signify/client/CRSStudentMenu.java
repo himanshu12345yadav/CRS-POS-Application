@@ -6,13 +6,13 @@ import com.signify.collection.UserSession;
 import com.signify.service.StudentService;
 
 public class CRSStudentMenu {
-	private String prompt = "\nSTUDENT MENU\n--------------\nPRESS 1 -> TO VIEW GRADES\n"
-			+ "PRESS 2 -> TO VIEW GRADE FOR A COURSE\n"
-			+ "PRESS 3 -> TO VIEW REGISTERED COURSE\n"
-			+ "PRESS 4 -> TO ADD COURSE\n"
-			+ "PRESS 5 -> TO DROP A COURSE\n"
-			+ "PRESS 6 -> TO PAY FEES\n"
-			+ "PRESS 7 -> TO LOGOUT";
+	private String prompt = "\nSTUDENT MENU\n--------------\n1. -> TO VIEW GRADES\n"
+			+ "2. -> TO VIEW GRADE FOR A COURSE\n"
+			+ "3. -> TO VIEW REGISTERED COURSE\n"
+			+ "4. -> TO ADD COURSE\n"
+			+ "5. -> TO DROP A COURSE\n"
+			+ "6. -> TO PAY FEES\n"
+			+ "7. -> TO LOGOUT";
 	
 	public void handleFees(StudentService ss) {
 		Scanner sc = new Scanner(System.in);

@@ -3,8 +3,16 @@ package com.signify.bean;
 import java.util.Date;
 
 public class Professor extends User {
-	private String department , designation;
+
+	private String department, designation, course;
 	private Date doj;
+
+	public Professor(String userId, String username) {
+		super(userId, username);
+	}
+
+	public Professor() {
+	}
 
 	public Date getDoj() {
 		return doj;
@@ -29,5 +37,13 @@ public class Professor extends User {
 	public void setDesignation(String designation) {
 		this.designation = designation;
 	}
-	
+
+	public String getCourse() {
+		return course;
+	}
+
+	public void setCourse(String course) {
+		this.course = course;
+	}
+
 }

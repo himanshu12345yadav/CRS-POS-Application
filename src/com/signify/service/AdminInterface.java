@@ -1,12 +1,37 @@
 package com.signify.service;
 
+import java.util.List;
+
+import com.signify.bean.Admin;
+import com.signify.bean.Course;
+import com.signify.bean.Professor;
+import com.signify.bean.Student;
+
 public interface AdminInterface {
-	public void approveStudent(String studentUsername);
-	public void addProfessor(String username , String password , String name , String address);
-	public void generateReportCard(String studentId , String courseId , int semester);
-	public void assignProfessorToCourse(String professorId , String courseId);
-	public void addCourse(String courseCode , String name , boolean isOffered , String instructor);
-	public void removeCourse(String courseId);
-	public void viewCourseDetails(String courseId);
+
+	public void addCourse(Course course);
+
+	public void removeCourse(String courseCode);
+
+	public Course getCourseDetails(String courseCode);
+
+	public void addProfessor(Professor p);
+
+	public void assignProfessorToCourse(String professorid, String courseCode);
+
+	public List<Professor> viewProfessors();
+
+	public void addAdmin(Admin a);
+
+	public List<Admin> viewAdmins();
+
+	public List<Student> getUnapprovedStudents();
+
+	public void approveAllStudents();
+
+	public void approveStudentById(String studentId);
+
 	public double calculateCpi(String studentId);
+
+	public void generateReportCard(String studentId);
 }

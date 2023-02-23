@@ -4,6 +4,12 @@ import java.util.Date;
 
 public class SemesterRegistration {
 	private int studentId , semester;
+	public SemesterRegistration(int studentId, int semester, Date dateOfRegistration) {
+		super();
+		this.studentId = studentId;
+		this.semester = semester;
+		this.dateOfRegistration = dateOfRegistration;
+	}
 	private Date dateOfRegistration;
 	public int getStudentId() {
 		return studentId;

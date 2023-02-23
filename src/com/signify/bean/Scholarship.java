@@ -10,5 +10,10 @@ public class Scholarship {
 	public void setScholarshipName(String scholarshipName) {
 		this.scholarshipName = scholarshipName;
 	}
+
+	public Scholarship(String scholarshipName) {
+		super();
+		this.scholarshipName = scholarshipName;
+	}
 	
 }
