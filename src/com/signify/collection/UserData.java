@@ -2,7 +2,7 @@ package com.signify.collection;
 
 import com.signify.bean.User;
 import com.signify.bean.Course;
-import com.signify.bean.Payment;
+import com.signify.bean.OnlinePayment;
 
 import java.util.HashMap;
 

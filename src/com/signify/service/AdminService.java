@@ -8,7 +8,6 @@ import com.signify.bean.Professor;
 import com.signify.bean.Student;
 import com.signify.exception.CourseNotFoundException;
 import com.signify.exception.ProfessorNotFoundException;
-import com.signify.exception.UnApprovedStudentNotFoundException;
 import com.signify.exception.UserNotFoundException;
 import com.signify.jdbc.AdminDAO;
 
@@ -84,10 +83,11 @@ public class AdminService extends UserService implements AdminInterface {
 	public List<Student> getUnapprovedStudents() {
 		AdminDAO ad = new AdminDAO();
 		List<Student> students = null;
-		try {
-			students = ad.getUnapprovedStudents();
-		} catch (UnApprovedStudentNotFoundException e) {
-			System.out.println(e.getMessage());
+
+		students = ad.getUnapprovedStudents();
+
+		if(students == null) {
+			System.err.println("[info]: No Unapproved Student found");
 		}
 		return students;
 	}

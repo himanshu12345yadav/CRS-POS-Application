@@ -2,8 +2,8 @@ package com.signify.collection;
 
 import java.util.HashMap;
 
-import com.signify.bean.Payment;
+import com.signify.bean.OnlinePayment;
 
 public class PaymentData {
-	public static HashMap<String, Payment> payments = new HashMap<String , Payment>();
+	public static HashMap<String, OnlinePayment> payments = new HashMap<String , OnlinePayment>();
 }

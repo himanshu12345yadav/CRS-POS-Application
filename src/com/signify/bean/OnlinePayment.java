@@ -1,0 +1,55 @@
+package com.signify.bean;
+
+public class OnlinePayment extends Payment {
+	private boolean isCard;
+	private String cardNumber, cardType, modeOfTransfer, accountNumber, ifsccode;
+
+	public boolean isCard() {
+		return isCard;
+	}
+
+	public void setCard(boolean isCard) {
+		this.isCard = isCard;
+	}
+
+	public String getCardNumber() {
+		return cardNumber;
+	}
+
+	public void setCardNumber(String cardNumber) {
+		this.cardNumber = cardNumber;
+	}
+
+	public String getCardType() {
+		return cardType;
+	}
+
+	public void setCardType(String cardType) {
+		this.cardType = cardType;
+	}
+
+	public String getModeOfTransfer() {
+		return modeOfTransfer;
+	}
+
+	public void setModeOfTransfer(String modeOfTransfer) {
+		this.modeOfTransfer = modeOfTransfer;
+	}
+
+	public String getAccountNumber() {
+		return accountNumber;
+	}
+
+	public void setAccountNumber(String accountNumber) {
+		this.accountNumber = accountNumber;
+	}
+
+	public String getIfsccode() {
+		return ifsccode;
+	}
+
+	public void setIfsccode(String ifsccode) {
+		this.ifsccode = ifsccode;
+	}
+
+}

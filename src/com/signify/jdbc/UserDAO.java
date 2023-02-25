@@ -58,7 +58,6 @@ public class UserDAO implements IUserDAO {
 	public void updatePassword(String username, String oldPassword, String newPassword) throws UserNotFoundException {
 		Connection conn;
 		PreparedStatement st;
-		User usr = null;
 		try {
 			conn = DBUtils.getConnection();
 			st = conn.prepareStatement(DBConstants.SET_NEW_PASSWORD);
@@ -115,8 +114,7 @@ public class UserDAO implements IUserDAO {
 				user_query.setString(4, ((Professor) usr).getDepartment());
 				user_query.setString(5, null);
 				user_query.executeUpdate();
-			}
-			else if(usr instanceof Admin) {
+			} else if (usr instanceof Admin) {
 				user_query = conn.prepareStatement(DBConstants.REGISTER_ADMIN);
 				user_query.setString(1, usr.getUserId());
 				user_query.setString(2, usr.getUsername());

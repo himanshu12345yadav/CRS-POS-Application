@@ -10,8 +10,8 @@ import com.signify.reader.UserRegistration;
 import com.signify.service.UserService;
 
 public class CRSApplicationMenu {
-	private static String prompt = "\nMAIN MENU\n---------\n" + "1. TO LOGIN\n" + "2. TO REGISTRATION\n"
-			+ "3. TO UPDATE PASSWORD\n" + "4. TO EXIT\n";
+	private static String prompt = "\nMAIN MENU\n---------\n" + "1. LOGIN\n" + "2. REGISTER\n" + "3. UPDATE PASSWORD\n"
+			+ "4. EXIT\n";
 
 	public void loginHandler() {
 		{

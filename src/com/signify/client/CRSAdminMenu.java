@@ -14,9 +14,10 @@ import com.signify.service.AdminService;
 import com.signify.service.UserService;
 
 public class CRSAdminMenu {
-	private String prompt = "\nADMIN MENU\n------------\n1. -> FOR APPROVING STUDENT \n" + "2. -> TO ADD PROFESSOR \n"
-			+ "3. -> TO ADD NEW ADMIN\n" + "4. -> TO GENERATE REPORT CARD \n" + "5. -> TO ASSIGN A PROFESSOR\n"
-			+ "6. -> TO ADD COURSE \n" + "7. -> TO REMOVE COURSE\n" + "8. -> TO VIEW COURSES\n" + "9. -> LOGOUT\n";
+	private String prompt = "\nADMIN MENU\n------------\n1. APPROVE STUDENT \n" + "2. ADD PROFESSOR \n"
+			+ "3. ADD NEW ADMIN\n" + "4. ASSIGN PROFESSOR TO COURSE\n" + "5. ADD COURSE \n" + "6. REMOVE COURSE\n"
+			+ "7. VIEW COURSE DETAILS" + "8. CALCULATE CPI\n" + "9. VIEW PROFESSORS\n" + "10. VIEW ADMINS\n"
+			+ "11. LOGOUT";
 
 	public void displayAdminMenu() {
 		boolean flag = true;
@@ -29,12 +30,17 @@ public class CRSAdminMenu {
 
 			switch (input) {
 			case 1:
-				System.out.println("List of Unapproved Students");
 				List<Student> students = as.getUnapprovedStudents();
+				if (students == null) {
+					System.err.println("[info] : No Unapproved Students");
+					break;
+				}
+				System.out.println("List of Unapproved Students");
 
 				for (Student i : students) {
 					System.out.printf("%s %-10s %s", i.getUserId(), i.getUsername(), i.getName());
 				}
+
 				System.out.printf("1. To Approve all students %n 2. To Approve by Id %n");
 				int choice = Integer.parseInt(sc.nextLine());
 				switch (choice) {
@@ -95,10 +101,11 @@ public class CRSAdminMenu {
 				System.out.println("Course Code : ");
 				String courseCodeDetails = sc.nextLine();
 				Course crs = as.getCourseDetails(courseCodeDetails);
-				System.out.printf("Course Name %-5s %s Course Code %-5s %s Instructor %-5s %s Fee %-5s %f", crs.getName() , crs.getCourseCode() , crs.getInstructor() , crs.getCoursefee());
+				System.out.printf("Course Name %-5s %s Course Code %-5s %s Instructor %-5s %s Fee %-5s %f",
+						crs.getName(), crs.getCourseCode(), crs.getInstructor(), crs.getFee());
 				break;
 			case 9:
-				UserSession.user = null;
+				UserSession.clearSession();
 				return;
 			default:
 				System.out.println("Wrong input : Try again");

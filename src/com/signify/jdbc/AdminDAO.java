@@ -17,7 +17,6 @@ import com.signify.bean.Student;
 import com.signify.constants.DBConstants;
 import com.signify.exception.CourseNotFoundException;
 import com.signify.exception.ProfessorNotFoundException;
-import com.signify.exception.UnApprovedStudentNotFoundException;
 import com.signify.exception.UserNotFoundException;
 import com.signify.utils.DBUtils;
 
@@ -34,7 +33,7 @@ public class AdminDAO implements IAdminDAO {
 			st.setString(1, course.getCourseCode());
 			st.setString(2, course.getName());
 			st.setString(3, course.getInstructor());
-			st.setDouble(4, course.getCoursefee());
+			st.setDouble(4, course.getFee());
 			st.executeUpdate();
 
 			st_prof = conn.prepareStatement(DBConstants.UPDATE_PROFESSOR_COURSE);
@@ -99,7 +98,7 @@ public class AdminDAO implements IAdminDAO {
 				course.setCourseCode(rs.getString("coursecode"));
 				course.setName(rs.getString("coursename"));
 				course.setInstructor(rs.getString("instructor"));
-				course.setCoursefee(rs.getDouble("coursefee"));
+				course.setFee(rs.getDouble("coursefee"));
 			}
 		} catch (SQLException se) {
 			se.printStackTrace();
@@ -124,7 +123,7 @@ public class AdminDAO implements IAdminDAO {
 				c.setCourseCode(rs.getString("coursecode"));
 				c.setName(rs.getString("coursename"));
 				c.setInstructor(rs.getString("instructor"));
-				c.setCoursefee(rs.getDouble("coursefee"));
+				c.setFee(rs.getDouble("coursefee"));
 				cs.add(c);
 			}
 		} catch (SQLException se) {
@@ -135,7 +134,7 @@ public class AdminDAO implements IAdminDAO {
 		return cs;
 	}
 
-	public List<Student> getUnapprovedStudents() throws UnApprovedStudentNotFoundException {
+	public List<Student> getUnapprovedStudents() {
 		List<Student> students = new ArrayList<Student>();
 
 		Connection conn;
@@ -147,9 +146,6 @@ public class AdminDAO implements IAdminDAO {
 			st.setInt(1, 0);
 			ResultSet rs = st.executeQuery();
 
-			if (!rs.next()) {
-				throw new UnApprovedStudentNotFoundException();
-			}
 			while (rs.next()) {
 				Student s = new Student();
 				s.setUserId(rs.getString("userid"));

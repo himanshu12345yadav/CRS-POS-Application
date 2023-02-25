@@ -8,7 +8,6 @@ import com.signify.bean.Professor;
 import com.signify.bean.Student;
 import com.signify.exception.CourseNotFoundException;
 import com.signify.exception.ProfessorNotFoundException;
-import com.signify.exception.UnApprovedStudentNotFoundException;
 import com.signify.exception.UserNotFoundException;
 
 public interface IAdminDAO {
@@ -16,7 +15,7 @@ public interface IAdminDAO {
 
 	public void approveStudentById(String studentId) throws UserNotFoundException;
 
-	public List<Student> getUnapprovedStudents() throws UnApprovedStudentNotFoundException;
+	public List<Student> getUnapprovedStudents();
 
 	public List<Admin> getAdmins();
 

@@ -2,14 +2,14 @@ package com.signify.bean;
 
 public class Course {
 	private String courseCode, name, instructor;
-	private double coursefee;
+	private double fee;
 
 	public Course(String courseCode, String name, String instructor, double coursefee) {
 		super();
 		this.courseCode = courseCode;
 		this.name = name;
 		this.instructor = instructor;
-		this.coursefee = coursefee;
+		this.fee = fee;
 	}
 
 	public Course() {
@@ -39,12 +39,11 @@ public class Course {
 		this.instructor = instructor;
 	}
 
-	
-	public double getCoursefee() {
-		return coursefee;
+	public double getFee() {
+		return fee;
 	}
 
-	public void setCoursefee(double coursefee) {
-		this.coursefee = coursefee;
+	public void setFee(double coursefee) {
+		this.fee = coursefee;
 	}
 }
