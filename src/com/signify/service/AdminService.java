@@ -8,6 +8,7 @@ import com.signify.bean.Professor;
 import com.signify.bean.Student;
 import com.signify.exception.CourseNotFoundException;
 import com.signify.exception.ProfessorNotFoundException;
+import com.signify.exception.UserAlreadyExistsException;
 import com.signify.exception.UserNotFoundException;
 import com.signify.jdbc.AdminDAO;
 
@@ -86,14 +87,14 @@ public class AdminService extends UserService implements AdminInterface {
 
 		students = ad.getUnapprovedStudents();
 
-		if(students == null) {
+		if (students == null) {
 			System.err.println("[info]: No Unapproved Student found");
 		}
 		return students;
 	}
 
 	@Override
-	public void addProfessor(Professor professor) {
+	public void addProfessor(Professor professor) throws UserAlreadyExistsException {
 		UserService userService = new UserService();
 		userService.register(professor);
 	}
@@ -111,7 +112,7 @@ public class AdminService extends UserService implements AdminInterface {
 	}
 
 	@Override
-	public void addAdmin(Admin admin) {
+	public void addAdmin(Admin admin) throws UserAlreadyExistsException {
 		UserService userService = new UserService();
 		userService.register(admin);
 	}

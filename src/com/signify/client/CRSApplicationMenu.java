@@ -6,6 +6,7 @@ import com.signify.bean.Admin;
 import com.signify.bean.Professor;
 import com.signify.bean.Student;
 import com.signify.bean.User;
+import com.signify.exception.UserAlreadyExistsException;
 import com.signify.reader.UserRegistration;
 import com.signify.service.UserService;
 
@@ -28,6 +29,7 @@ public class CRSApplicationMenu {
 			if (usr != null) {
 				if (usr instanceof Student) {
 					CRSStudentMenu stMenu = new CRSStudentMenu();
+					stMenu.displayStudentMenu();
 				} else if (usr instanceof Admin) {
 					CRSAdminMenu adminMenu = new CRSAdminMenu();
 					adminMenu.displayAdminMenu();
@@ -45,7 +47,13 @@ public class CRSApplicationMenu {
 		UserRegistration userReg = new UserRegistration();
 		User usr = userReg.registerStudent();
 		UserService svc = new UserService();
-		svc.register(usr);
+
+		try {
+			svc.register(usr);
+			System.out.println("[info] : User Registered Successfully");
+		} catch (UserAlreadyExistsException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 
 	public void updatePassword() {
@@ -71,22 +79,22 @@ public class CRSApplicationMenu {
 			String type = sc.next();
 
 			switch (type) {
-			case "1":
-				crs.loginHandler();
-				break;
-			case "2":
-				crs.registerHandler();
-				break;
-			case "3":
-				crs.updatePassword();
-				break;
-			case "4":
-				flag = false;
-				System.out.println("👋 BYE");
-				return;
-			default:
-				System.out.println("WRONG INPUT : TRY AGAIN");
-				break;
+				case "1":
+					crs.loginHandler();
+					break;
+				case "2":
+					crs.registerHandler();
+					break;
+				case "3":
+					crs.updatePassword();
+					break;
+				case "4":
+					flag = false;
+					System.out.println("👋 BYE");
+					return;
+				default:
+					System.out.println("WRONG INPUT : TRY AGAIN");
+					break;
 			}
 		} while (flag);
 	}

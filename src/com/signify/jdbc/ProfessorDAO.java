@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mysql.cj.x.protobuf.MysqlxPrepare.Execute;
 import com.signify.bean.Student;
 import com.signify.constants.DBConstants;
 import com.signify.exception.ProfessorNotAssignedException;
@@ -26,7 +25,7 @@ public class ProfessorDAO implements IProfessorDAO {
 				PreparedStatement stmtGetStudents = conn.prepareStatement(DBConstants.GET_ENROLLED_STUDENTS)) {
 			stmtGetCourse.setString(1, professorId);
 			ResultSet rs = stmtGetCourse.executeQuery();
-			String coursecode = rs.getString("course");
+			rs.getString("course");
 
 			if (rs.wasNull()) {
 				throw new ProfessorNotAssignedException(professorId);

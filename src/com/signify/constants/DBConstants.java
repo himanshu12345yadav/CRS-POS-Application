@@ -46,11 +46,8 @@ public class DBConstants {
 	public static final String DROP_STUDENT_COURSE = "delete from registeredcourse where courseCode = ? and studentId = ?";
 	public static final String GET_REGISTERED_COURSE = "select rc.courseCode as coursecode, cat.coursename as coursename, rc.type as type from registeredcourse rc inner join catalog cat on cat.coursecode = rc.coursecode where rc.studentId=?";
 	public static final String GET_FEES = "select catalog.coursecode as coursecode , coursename , coursefee from registeredcourse inner join catalog on registeredcourse.coursecode = catalog.coursecode where studentId=?";
-	public static final String PAY_FEE_BY_CHEQUE = "insert into payment(referenceid , studentid , mode, status, amount) values(? , ? , ? , ? , ?)";
-	public static final String PAY_FEE_OFFLINE = "insert into payment_offline(referenceid , cash , chequenum, bankname) values(? , ? , ? , ?)";
-	public static final String PAY_FEE_BY_CASH = "insert into payment(referenceid , studentid , mode, status , amount) values(? , ? , ? , ? , ?)";
-	public static final String PAY_FEE_BY_CARD = "insert into payment(referenceid , studentid , mode , status , amount) values(? , ? , ? , ? , ?)";
-	public static final String PAY_FEE_ONLINE = "insert into payment_online(referenceid, card, cardnum, cardtype, modeoftransfer, accountnumber, ifscode) values(? , ? , ? , ? , ? , ? , ?)";
-	public static final String PAY_FEE_BY_NETBANKING = "insert into payment_online(referenceid , card , cardnum , cardtype , modeoftransfer , accountnumber , ifscode) values(? , ? , ? , ? , ? , ? , ?)";
+	public static final String PAYMENT_OFFLINE = "insert into payment_offline(referenceid , cash , chequenum, bankname) values(? , ? , ? , ?)";
+	public static final String PAYMENT_ONLINE = "insert into payment_online(referenceid, card, cardnum, cardtype, modeoftransfer, accountnumber, ifscode) values(? , ? , ? , ? , ? , ? , ?)";
+	public static final String PAYMENT = "insert into payment(referenceid , studentid , mode, status , amount) values(? , ? , ? , ? , ?)";
 
 }

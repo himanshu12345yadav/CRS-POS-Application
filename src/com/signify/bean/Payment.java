@@ -2,8 +2,20 @@ package com.signify.bean;
 
 public class Payment {
 	private String studentId, referenceId, mode;
-	private float amount;
+	private double amount;
 	private int status;
+
+	public Payment() {
+		// default constructor
+	}
+
+	public Payment(String studentId, int status, int amount, String mode, String referenceId) {
+		this.studentId = studentId;
+		this.status = status;
+		this.mode = mode;
+		this.amount = amount;
+		this.referenceId = referenceId;
+	}
 
 	public String getStudentId() {
 		return studentId;
@@ -29,11 +41,11 @@ public class Payment {
 		this.mode = mode;
 	}
 
-	public float getAmount() {
+	public double getAmount() {
 		return amount;
 	}
 
-	public void setAmount(float amount) {
+	public void setAmount(Double amount) {
 		this.amount = amount;
 	}
 

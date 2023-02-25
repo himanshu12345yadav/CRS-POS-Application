@@ -28,14 +28,9 @@ public class UserService implements UserInterface {
 	}
 
 	@Override
-	public void register(User usr) {
+	public void register(User usr) throws UserAlreadyExistsException {
 		UserDAO ud = new UserDAO();
-		try {
-			ud.registerUser(usr);
-			System.out.println("[info] : User Registered Successfully");
-		} catch (UserAlreadyExistsException e) {
-			System.out.println(e.getMessage());
-		}
+		ud.registerUser(usr);
 	}
 
 	@Override

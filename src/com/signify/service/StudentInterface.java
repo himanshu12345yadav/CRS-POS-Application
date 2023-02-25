@@ -5,35 +5,36 @@ import java.util.List;
 import com.signify.bean.Course;
 import com.signify.bean.OfflinePayment;
 import com.signify.bean.OnlinePayment;
-import com.signify.bean.Payment;
 import com.signify.bean.RegisteredCourse;
+import com.signify.exception.CourseLimitExceedException;
+import com.signify.exception.CourseNotFoundException;
+import com.signify.exception.SemesterNotRegisteredException;
+import com.signify.exception.StudentNotRegisteredException;
 
 public interface StudentInterface {
 	public void register();
 
 	public String getStudentId(String userId);
 
-	public boolean getApprovedStatus(String studentId);
+	public boolean getApprovedStatus(String studentId) throws StudentNotRegisteredException;
 
-	public List<Course> getAvailableCourses(String studentId);
+	public List<Course> getAvailableCourses(String studentId) throws SemesterNotRegisteredException;
 
-	public void semesterRegister(String studentId, int semester);
+	public void semesterRegister(String studentId, int semester) throws StudentNotRegisteredException;
 
-	public void addCourse(String studentId, String courseCode, int type);
+	public void addCourse(String studentId, String courseCode, int type)
+			throws CourseNotFoundException, CourseLimitExceedException;
 
-	public void dropCourse(String studentId, String courseCode);
+	public void dropCourse(String studentId, String courseCode) throws CourseNotFoundException;
 
 	public List<RegisteredCourse> getRegisteredCourses(String studentId);
 
-	public List<String> getGrades(String studentId);
+	public List<RegisteredCourse> getGrades(String studentId);
 
 	public List<Course> getFees(String studentId);
 
-	public void payFeeByCard(OnlinePayment online, Payment payment);
+	public void payFeesOffline(OfflinePayment payment);
 
-	public void payFeeByNetBanking(OnlinePayment online, Payment payment);
+	public void payFeesOnline(OnlinePayment payment);
 
-	public void payfeeByCash(OfflinePayment offline, Payment payment);
-
-	public void payFeeByCheque(OfflinePayment offline, Payment payment);
 }

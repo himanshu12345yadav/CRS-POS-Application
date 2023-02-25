@@ -5,7 +5,6 @@ import java.util.List;
 import com.signify.bean.Course;
 import com.signify.bean.OfflinePayment;
 import com.signify.bean.OnlinePayment;
-import com.signify.bean.Payment;
 import com.signify.bean.RegisteredCourse;
 import com.signify.bean.Student;
 import com.signify.exception.CourseLimitExceedException;
@@ -20,11 +19,12 @@ public interface IStudentDAO {
 
 	public String getStudentId(String userId);
 
-	public boolean getApprovalStatus(String studentId);
+	public boolean getApprovalStatus(String studentId) throws StudentNotRegisteredException;
 
-	public List<Course> getAvailableCourses(String studentId) throws StudentNotRegisteredException, SemesterNotRegisteredException;
+	public List<Course> getAvailableCourses(String studentId)
+			throws StudentNotRegisteredException, SemesterNotRegisteredException;
 
-	public void addCourse(String studentId, String courseCode)
+	public void addCourse(String studentId, String courseCode, int type)
 			throws CourseNotFoundException, CourseLimitExceedException;
 
 	public void dropCourse(String studentId, String courseCode) throws CourseNotFoundException;
@@ -35,11 +35,8 @@ public interface IStudentDAO {
 
 	public List<Course> getFees(String studentId);
 
-	public void payFeesByCheque(OfflinePayment ofp, Payment p);
+	public void payFeesOffline(OfflinePayment payment);
 
-	public void payFeesByCash(OfflinePayment ofp, Payment p);
+	public void payFeesOnline(OnlinePayment payment);
 
-	public void payFeesByCard(OnlinePayment onp, Payment p);
-
-	public void payFeesByNetBanking(OnlinePayment onp, Payment p);
 }

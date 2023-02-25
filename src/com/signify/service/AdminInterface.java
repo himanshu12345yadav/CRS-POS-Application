@@ -6,6 +6,7 @@ import com.signify.bean.Admin;
 import com.signify.bean.Course;
 import com.signify.bean.Professor;
 import com.signify.bean.Student;
+import com.signify.exception.UserAlreadyExistsException;
 
 public interface AdminInterface {
 
@@ -15,13 +16,13 @@ public interface AdminInterface {
 
 	public Course getCourseDetails(String courseCode);
 
-	public void addProfessor(Professor p);
+	public void addProfessor(Professor p) throws UserAlreadyExistsException;
 
 	public void assignProfessorToCourse(String professorid, String courseCode);
 
 	public List<Professor> viewProfessors();
 
-	public void addAdmin(Admin a);
+	public void addAdmin(Admin a) throws UserAlreadyExistsException;
 
 	public List<Admin> viewAdmins();
 

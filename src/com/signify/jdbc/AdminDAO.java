@@ -31,7 +31,7 @@ public class AdminDAO implements IAdminDAO {
 
 			st = conn.prepareStatement(DBConstants.INSERT_COURSE_IN_CATALOG);
 			st.setString(1, course.getCourseCode());
-			st.setString(2, course.getName());
+			st.setString(2, course.getCourseName());
 			st.setString(3, course.getInstructor());
 			st.setDouble(4, course.getFee());
 			st.executeUpdate();
@@ -96,7 +96,7 @@ public class AdminDAO implements IAdminDAO {
 
 			while (rs.next()) {
 				course.setCourseCode(rs.getString("coursecode"));
-				course.setName(rs.getString("coursename"));
+				course.setCourseName(rs.getString("coursename"));
 				course.setInstructor(rs.getString("instructor"));
 				course.setFee(rs.getDouble("coursefee"));
 			}
@@ -121,7 +121,7 @@ public class AdminDAO implements IAdminDAO {
 			while (rs.next()) {
 				Course c = new Course();
 				c.setCourseCode(rs.getString("coursecode"));
-				c.setName(rs.getString("coursename"));
+				c.setCourseName(rs.getString("coursename"));
 				c.setInstructor(rs.getString("instructor"));
 				c.setFee(rs.getDouble("coursefee"));
 				cs.add(c);

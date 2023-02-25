@@ -9,9 +9,9 @@ import com.signify.bean.Professor;
 import com.signify.bean.Student;
 import com.signify.collection.UserSession;
 import com.signify.constants.DBConstants;
+import com.signify.exception.UserAlreadyExistsException;
 import com.signify.reader.UserRegistration;
 import com.signify.service.AdminService;
-import com.signify.service.UserService;
 
 public class CRSAdminMenu {
 	private String prompt = "\nADMIN MENU\n------------\n1. APPROVE STUDENT \n" + "2. ADD PROFESSOR \n"
@@ -29,86 +29,94 @@ public class CRSAdminMenu {
 			int input = sc.nextInt();
 
 			switch (input) {
-			case 1:
-				List<Student> students = as.getUnapprovedStudents();
-				if (students == null) {
-					System.err.println("[info] : No Unapproved Students");
-					break;
-				}
-				System.out.println("List of Unapproved Students");
-
-				for (Student i : students) {
-					System.out.printf("%s %-10s %s", i.getUserId(), i.getUsername(), i.getName());
-				}
-
-				System.out.printf("1. To Approve all students %n 2. To Approve by Id %n");
-				int choice = Integer.parseInt(sc.nextLine());
-				switch (choice) {
 				case 1:
-					as.approveAllStudents();
+					List<Student> students = as.getUnapprovedStudents();
+					if (students == null) {
+						System.err.println("[info] : No Unapproved Students");
+						break;
+					}
+					System.out.println("List of Unapproved Students");
+
+					for (Student i : students) {
+						System.out.printf("%s %-10s %s", i.getUserId(), i.getUsername(), i.getName());
+					}
+
+					System.out.printf("1. To Approve all students %n 2. To Approve by Id %n");
+					int choice = Integer.parseInt(sc.nextLine());
+					switch (choice) {
+						case 1:
+							as.approveAllStudents();
+							break;
+						case 2:
+							System.out.print("Enter Student id : ");
+							String studentId = sc.nextLine();
+							as.approveStudentById(studentId);
+							break;
+						default:
+							System.out.println("Invalid Input Received");
+							break;
+					}
 					break;
 				case 2:
-					System.out.print("Enter Student id : ");
-					String studentId = sc.nextLine();
-					as.approveStudentById(studentId);
+					UserRegistration profUser = new UserRegistration();
+					Professor prof = (Professor) profUser.registerUser(DBConstants.PROFESSOR_ROLE_ID);
+					try {
+						as.addProfessor(prof);
+					} catch (UserAlreadyExistsException e) {
+						System.out.println(e.getMessage());
+					}
 					break;
-				default:
-					System.out.println("Invalid Input Received");
+				case 3:
+					UserRegistration adminUser = new UserRegistration();
+					Admin admin = (Admin) adminUser.registerUser(DBConstants.ADMIN_ROLE_ID);
+					try {
+						as.addAdmin(admin);
+					} catch (UserAlreadyExistsException e) {
+						System.out.println(e.getMessage());
+					}
 					break;
-				}
-				break;
-			case 2:
-				UserRegistration profUser = new UserRegistration();
-				Professor prof = (Professor) profUser.registerUser(DBConstants.PROFESSOR_ROLE_ID);
-				as.addProfessor(prof);
-				break;
-			case 3:
-				UserRegistration adminUser = new UserRegistration();
-				Admin admin = (Admin) adminUser.registerUser(DBConstants.ADMIN_ROLE_ID);
-				as.addAdmin(admin);
-				break;
-			case 4:
-				System.out.print("Enter Student Id : ");
-				String stuId = sc.nextLine();
-				as.generateReportCard(stuId);
-				break;
-			case 5:
-				System.out.println("Professor Id : ");
-				String courseProfId = sc.nextLine();
-				System.out.println("Course Id : ");
-				String CourseId = sc.nextLine();
-				as.assignProfessorToCourse(CourseId, courseProfId);
-				break;
-			case 6:
-				System.out.print("Course Code :");
-				String courseCode = sc.nextLine();
-				System.out.print("Course Name : ");
-				String courseName = sc.nextLine();
-				System.out.print("Course Instructor");
-				String instructor = sc.nextLine();
-				System.out.print("Course Fee");
-				Double fee = Double.parseDouble(sc.nextLine());
+				case 4:
+					System.out.print("Enter Student Id : ");
+					String stuId = sc.nextLine();
+					as.generateReportCard(stuId);
+					break;
+				case 5:
+					System.out.println("Professor Id : ");
+					String courseProfId = sc.nextLine();
+					System.out.println("Course Id : ");
+					String CourseId = sc.nextLine();
+					as.assignProfessorToCourse(CourseId, courseProfId);
+					break;
+				case 6:
+					System.out.print("Course Code :");
+					String courseCode = sc.nextLine();
+					System.out.print("Course Name : ");
+					String courseName = sc.nextLine();
+					System.out.print("Course Instructor");
+					String instructor = sc.nextLine();
+					System.out.print("Course Fee");
+					Double fee = Double.parseDouble(sc.nextLine());
 
-				Course course = new Course(courseCode, courseName, instructor, fee);
-				as.addCourse(course);
-				break;
-			case 7:
-				System.out.print("Course Code : ");
-				String removeCourseCode = sc.nextLine();
-				as.removeCourse(removeCourseCode);
-				break;
-			case 8:
-				System.out.println("Course Code : ");
-				String courseCodeDetails = sc.nextLine();
-				Course crs = as.getCourseDetails(courseCodeDetails);
-				System.out.printf("Course Name %-5s %s Course Code %-5s %s Instructor %-5s %s Fee %-5s %f",
-						crs.getName(), crs.getCourseCode(), crs.getInstructor(), crs.getFee());
-				break;
-			case 9:
-				UserSession.clearSession();
-				return;
-			default:
-				System.out.println("Wrong input : Try again");
+					Course course = new Course(courseCode, courseName, instructor, fee);
+					as.addCourse(course);
+					break;
+				case 7:
+					System.out.print("Course Code : ");
+					String removeCourseCode = sc.nextLine();
+					as.removeCourse(removeCourseCode);
+					break;
+				case 8:
+					System.out.println("Course Code : ");
+					String courseCodeDetails = sc.nextLine();
+					Course crs = as.getCourseDetails(courseCodeDetails);
+					System.out.printf("Course Name %-5s %s Course Code %-5s %s Instructor %-5s %s Fee %-5s %f",
+							crs.getCourseName(), crs.getCourseCode(), crs.getInstructor(), crs.getFee());
+					break;
+				case 9:
+					UserSession.clearSession();
+					return;
+				default:
+					System.out.println("Wrong input : Try again");
 			}
 		} while (flag);
 	}

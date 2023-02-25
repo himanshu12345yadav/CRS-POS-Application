@@ -8,7 +8,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 import java.util.UUID;
 
-import com.mysql.cj.xdevapi.DbDoc;
 import com.signify.bean.Admin;
 import com.signify.bean.Professor;
 import com.signify.bean.Student;
@@ -57,8 +56,10 @@ public class UserRegistration {
 		String password = sc.next();
 		System.out.print("Enter Address : ");
 		String address = sc.next();
-		System.out.print("Enter Date of joining : ");
-		String doj = sc.next();
+		System.out.print("Enter Date of joining (YYYY-MM-DD) or press 1 for Today");
+		int date = Integer.parseInt(sc.nextLine());
+		// ! Handle Date inputs
+		String doj = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 		String userid = UUID.randomUUID().toString();
 
 		if (roleid == DBConstants.ADMIN_ROLE_ID) {
@@ -66,6 +67,7 @@ public class UserRegistration {
 			admin.setRoleid(DBConstants.ADMIN_ROLE_ID);
 			admin.setPassword(password);
 			admin.setAddress(address);
+			admin.setDOJ(doj);
 
 			return admin;
 		} else if (roleid == DBConstants.PROFESSOR_ROLE_ID) {
@@ -80,6 +82,7 @@ public class UserRegistration {
 			prof.setAddress(address);
 			prof.setDepartment(department);
 			prof.setDesignation(designation);
+			prof.setDOJ(doj);
 
 			return prof;
 		}

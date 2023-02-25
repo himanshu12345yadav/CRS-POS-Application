@@ -1,15 +1,15 @@
 package com.signify.bean;
 
 public class Course {
-	private String courseCode, name, instructor;
+	private String courseCode, courseName, instructor;
 	private double fee;
 
-	public Course(String courseCode, String name, String instructor, double coursefee) {
+	public Course(String courseCode, String courseName, String instructor, double coursefee) {
 		super();
 		this.courseCode = courseCode;
-		this.name = name;
+		this.courseName = courseName;
 		this.instructor = instructor;
-		this.fee = fee;
+		this.fee = coursefee;
 	}
 
 	public Course() {
@@ -23,12 +23,12 @@ public class Course {
 		this.courseCode = courseCode;
 	}
 
-	public String getName() {
-		return name;
+	public String getCourseName() {
+		return courseName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setCourseName(String courseName) {
+		this.courseName = courseName;
 	}
 
 	public String getInstructor() {

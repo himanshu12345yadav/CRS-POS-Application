@@ -7,11 +7,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mysql.cj.result.SqlTimestampValueFactory;
 import com.signify.bean.Course;
 import com.signify.bean.OfflinePayment;
 import com.signify.bean.OnlinePayment;
-import com.signify.bean.Payment;
 import com.signify.bean.RegisteredCourse;
 import com.signify.bean.Student;
 import com.signify.constants.DBConstants;
@@ -69,7 +67,7 @@ public class StudentDAO implements IStudentDAO {
 	}
 
 	@Override
-	public boolean getApprovalStatus(String studentId) {
+	public boolean getApprovalStatus(String studentId) throws StudentNotRegisteredException {
 		Connection conn = DBUtils.getConnection();
 		boolean isapproved = false;
 
@@ -78,6 +76,9 @@ public class StudentDAO implements IStudentDAO {
 
 			ResultSet rs = stmtGetApprovalStatus.executeQuery();
 
+			if (!rs.next()) {
+				throw new StudentNotRegisteredException(studentId);
+			}
 			while (rs.next()) {
 				isapproved = rs.getInt(1) == 1 ? true : false;
 			}
@@ -115,7 +116,7 @@ public class StudentDAO implements IStudentDAO {
 			while (rsCourses.next()) {
 				Course course = new Course();
 				course.setCourseCode(rs.getString("coursecode"));
-				course.setName(rs.getString("coursename"));
+				course.setCourseName(rs.getString("coursename"));
 				course.setInstructor(rs.getString("instructor"));
 				courses.add(course);
 			}
@@ -127,9 +128,9 @@ public class StudentDAO implements IStudentDAO {
 	}
 
 	@Override
-	public void addCourse(String studentId, String courseCode)
+	public void addCourse(String studentId, String courseCode, int type)
 			throws CourseNotFoundException, CourseLimitExceedException {
-
+		// TODO ADD COURSE LOGIC
 	}
 
 	@Override
@@ -227,7 +228,7 @@ public class StudentDAO implements IStudentDAO {
 				String coursename = rs.getString("coursename");
 				int fee = rs.getInt("coursefee");
 				course.setCourseCode(coursecode);
-				course.setName(coursename);
+				course.setCourseName(coursename);
 				course.setFee(fee);
 				courses.add(course);
 			}
@@ -240,11 +241,11 @@ public class StudentDAO implements IStudentDAO {
 	}
 
 	@Override
-	public void payFeesByCheque(OfflinePayment offline, Payment payment) {
+	public void payFeesOffline(OfflinePayment payment) {
 		Connection conn = DBUtils.getConnection();
 
-		try (PreparedStatement stmtPayFeeByCheque = conn.prepareStatement(DBConstants.PAY_FEE_BY_CHEQUE);
-				PreparedStatement stmtPayFeeOffline = conn.prepareStatement(DBConstants.PAY_FEE_OFFLINE)) {
+		try (PreparedStatement stmtPayFeeByCheque = conn.prepareStatement(DBConstants.PAYMENT);
+				PreparedStatement stmtPayFeeOffline = conn.prepareStatement(DBConstants.PAYMENT_OFFLINE)) {
 
 			stmtPayFeeByCheque.setString(1, payment.getReferenceId());
 			stmtPayFeeByCheque.setString(2, payment.getStudentId());
@@ -254,10 +255,10 @@ public class StudentDAO implements IStudentDAO {
 
 			stmtPayFeeByCheque.execute();
 
-			stmtPayFeeOffline.setString(1, offline.getReferenceId());
-			stmtPayFeeOffline.setInt(2, offline.isCash() == true ? 1 : 0);
-			stmtPayFeeOffline.setInt(3, offline.getChequeNumber());
-			stmtPayFeeOffline.setString(4, offline.getBankName());
+			stmtPayFeeOffline.setString(1, payment.getReferenceId());
+			stmtPayFeeOffline.setInt(2, payment.isCash());
+			stmtPayFeeOffline.setInt(3, payment.getChequeNumber());
+			stmtPayFeeOffline.setString(4, payment.getBankName());
 
 			stmtPayFeeOffline.execute();
 
@@ -267,37 +268,11 @@ public class StudentDAO implements IStudentDAO {
 	}
 
 	@Override
-	public void payFeesByCash(OfflinePayment offline, Payment payment) {
+	public void payFeesOnline(OnlinePayment payment) {
 		Connection conn = DBUtils.getConnection();
 
-		try (PreparedStatement stmtPayFeeByCash = conn.prepareStatement(DBConstants.PAY_FEE_BY_CASH);
-				PreparedStatement stmtPayOffline = conn.prepareStatement(DBConstants.PAY_FEE_OFFLINE)) {
-
-			stmtPayFeeByCash.setString(1, payment.getReferenceId());
-			stmtPayFeeByCash.setString(2, payment.getStudentId());
-			stmtPayFeeByCash.setString(3, payment.getMode());
-			stmtPayFeeByCash.setString(4, "PAID");
-			stmtPayFeeByCash.setDouble(5, payment.getAmount());
-			stmtPayFeeByCash.executeUpdate();
-
-			stmtPayOffline.setString(1, offline.getReferenceId());
-			stmtPayOffline.setInt(2, offline.isCash() == true ? 1 : 0);
-			stmtPayOffline.setInt(3, offline.getChequeNumber());
-			stmtPayOffline.setString(4, offline.getBankName());
-			// ! check this query
-			stmtPayOffline.execute();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public void payFeesByCard(OnlinePayment online, Payment payment) {
-		Connection conn = DBUtils.getConnection();
-
-		try (PreparedStatement stmtPayFeeByCard = conn.prepareStatement(DBConstants.PAY_FEE_BY_CARD);
-				PreparedStatement stmtPayFeeOnline = conn.prepareStatement(DBConstants.PAY_FEE_ONLINE)) {
+		try (PreparedStatement stmtPayFeeByCard = conn.prepareStatement(DBConstants.PAYMENT);
+				PreparedStatement stmtPayFeeOnline = conn.prepareStatement(DBConstants.PAYMENT_ONLINE)) {
 
 			stmtPayFeeByCard.setString(1, payment.getReferenceId());
 			stmtPayFeeByCard.setString(2, payment.getStudentId());
@@ -307,43 +282,13 @@ public class StudentDAO implements IStudentDAO {
 
 			stmtPayFeeByCard.execute();
 
-			stmtPayFeeOnline.setString(1, online.getReferenceId());
-			stmtPayFeeOnline.setInt(2, online.isCard() == true ? 1 : 0);
-			stmtPayFeeOnline.setString(3, online.getCardNumber());
-			stmtPayFeeOnline.setString(4, online.getCardType());
-			stmtPayFeeOnline.setString(5, online.getModeOfTransfer());
-			stmtPayFeeOnline.setString(6, online.getAccountNumber());
-			stmtPayFeeOnline.setString(7, online.getIfsccode());
-
-			stmtPayFeeOnline.execute();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public void payFeesByNetBanking(OnlinePayment online, Payment payment) {
-		Connection conn = DBUtils.getConnection();
-
-		try (PreparedStatement stmtPayFeeByNetBanking = conn.prepareStatement(DBConstants.PAY_FEE_BY_NETBANKING);
-				PreparedStatement stmtPayFeeOnline = conn.prepareStatement(DBConstants.PAY_FEE_ONLINE)) {
-
-			stmtPayFeeByNetBanking.setString(1, payment.getReferenceId());
-			stmtPayFeeByNetBanking.setString(2, payment.getStudentId());
-			stmtPayFeeByNetBanking.setString(3, payment.getMode());
-			stmtPayFeeByNetBanking.setString(4, "PAID");
-			stmtPayFeeByNetBanking.setDouble(5, payment.getAmount());
-
-			stmtPayFeeByNetBanking.execute();
-
-			stmtPayFeeOnline.setString(1, online.getReferenceId());
-			stmtPayFeeOnline.setInt(2, online.isCard() == true ? 1 : 0);
-			stmtPayFeeOnline.setString(3, online.getCardNumber());
-			stmtPayFeeOnline.setString(4, online.getCardType());
-			stmtPayFeeOnline.setString(5, online.getModeOfTransfer());
-			stmtPayFeeOnline.setString(6, online.getAccountNumber());
-			stmtPayFeeOnline.setString(7, online.getIfsccode());
+			stmtPayFeeOnline.setString(1, payment.getReferenceId());
+			stmtPayFeeOnline.setInt(2, payment.isCard());
+			stmtPayFeeOnline.setString(3, payment.getCardNumber());
+			stmtPayFeeOnline.setString(4, payment.getCardType());
+			stmtPayFeeOnline.setString(5, payment.getModeOfTransfer());
+			stmtPayFeeOnline.setString(6, payment.getAccountNumber());
+			stmtPayFeeOnline.setString(7, payment.getIfsccode());
 
 			stmtPayFeeOnline.execute();
 

@@ -1,7 +1,7 @@
 package com.signify.bean;
 
 public class User {
-	private String userId, username, password, name, address;
+	private String userId, username, password, name, address, doj;
 	private int roleid;
 
 	public User() {
@@ -76,6 +76,14 @@ public class User {
 
 	public void setRoleid(int roleid) {
 		this.roleid = roleid;
+	}
+
+	public String getDOJ() {
+		return doj;
+	}
+
+	public void setDOJ(String doj) {
+		this.doj = doj;
 	}
 
 }
