@@ -9,6 +9,7 @@ import com.signify.bean.RegisteredCourse;
 import com.signify.exception.CourseLimitExceedException;
 import com.signify.exception.CourseNotFoundException;
 import com.signify.exception.SemesterNotRegisteredException;
+import com.signify.exception.StudentNotApprovedException;
 import com.signify.exception.StudentNotRegisteredException;
 import com.signify.jdbc.StudentDAO;
 
@@ -28,7 +29,7 @@ public class StudentService extends UserService implements StudentInterface {
 	}
 
 	@Override
-	public boolean getApprovedStatus(String studentId) throws StudentNotRegisteredException {
+	public boolean getApprovedStatus(String studentId) throws StudentNotApprovedException {
 		return dao.getApprovalStatus(studentId);
 	}
 

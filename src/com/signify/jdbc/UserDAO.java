@@ -32,7 +32,7 @@ public class UserDAO implements IUserDAO {
 			ResultSet rs = st.executeQuery();
 
 			if (!rs.next()) {
-				throw new UserNotFoundException(username);
+				throw new UserNotFoundException("Invalid UserName or Password");
 			} else {
 				int roleid = rs.getInt("roleid");
 				if (roleid == DBConstants.ADMIN_ROLE_ID) {
@@ -96,7 +96,7 @@ public class UserDAO implements IUserDAO {
 				user_query = conn.prepareStatement(DBConstants.REGISTER_STUDENT);
 				user_query.setString(1, usr.getUserId());
 				user_query.setString(2, ((Student) usr).getStudentId());
-				user_query.setString(3, usr.getName());
+				user_query.setString(3, usr.getUsername());
 				user_query.setString(4, ((Student) usr).getBranch());
 				user_query.setInt(5, ((Student) usr).getAge());
 				user_query.setString(6, ((Student) usr).getBloodGroup());

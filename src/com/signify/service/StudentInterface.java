@@ -9,6 +9,7 @@ import com.signify.bean.RegisteredCourse;
 import com.signify.exception.CourseLimitExceedException;
 import com.signify.exception.CourseNotFoundException;
 import com.signify.exception.SemesterNotRegisteredException;
+import com.signify.exception.StudentNotApprovedException;
 import com.signify.exception.StudentNotRegisteredException;
 
 public interface StudentInterface {
@@ -16,7 +17,7 @@ public interface StudentInterface {
 
 	public String getStudentId(String userId);
 
-	public boolean getApprovedStatus(String studentId) throws StudentNotRegisteredException;
+	public boolean getApprovedStatus(String studentId) throws StudentNotApprovedException;
 
 	public List<Course> getAvailableCourses(String studentId) throws SemesterNotRegisteredException;
 

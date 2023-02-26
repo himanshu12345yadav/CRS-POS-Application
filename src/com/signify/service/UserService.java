@@ -8,17 +8,9 @@ import com.signify.jdbc.UserDAO;
 
 public class UserService implements UserInterface {
 	@Override
-	public User login(String username, String password) {
+	public User login(String username, String password) throws UserNotFoundException {
 		UserDAO ud = new UserDAO();
-		User usr = null;
-		try {
-			usr = ud.login(username, password);
-			UserSession.user = usr;
-		} catch (UserNotFoundException e) {
-			System.err.printf("[error] : %s", e.getMessage());
-		}
-
-		return usr;
+		return ud.login(username, password);
 	}
 
 	@Override

@@ -4,6 +4,7 @@
 package com.signify.jdbc;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,20 +16,21 @@ import com.signify.bean.Course;
 import com.signify.bean.Professor;
 import com.signify.bean.Student;
 import com.signify.constants.DBConstants;
+import com.signify.exception.CourseNotAssignedException;
 import com.signify.exception.CourseNotFoundException;
 import com.signify.exception.ProfessorNotFoundException;
+import com.signify.exception.UserAlreadyExistsException;
 import com.signify.exception.UserNotFoundException;
 import com.signify.utils.DBUtils;
 
 public class AdminDAO implements IAdminDAO {
-
-	public void addCourse(Course course) {
-		Connection conn = null;
+	@Override
+	public void addCourse(Course course) throws CourseNotAssignedException {
+		Connection conn = DBUtils.getConnection();
 		PreparedStatement st = null;
 		PreparedStatement st_prof = null;
-		try {
-			conn = DBUtils.getConnection();
 
+		try {
 			st = conn.prepareStatement(DBConstants.INSERT_COURSE_IN_CATALOG);
 			st.setString(1, course.getCourseCode());
 			st.setString(2, course.getCourseName());
@@ -41,11 +43,13 @@ public class AdminDAO implements IAdminDAO {
 			st_prof.setString(2, course.getInstructor());
 			st_prof.executeUpdate();
 
-		} catch (SQLException s) {
-			s.printStackTrace();
+		} catch (SQLException e) {
+			// ! check a better way - sql constraint fail
+			throw new CourseNotAssignedException();
 		}
 	}
 
+	@Override
 	public void removeCourse(String courseCode) throws CourseNotFoundException {
 		Connection conn = null;
 		PreparedStatement st = null;
@@ -53,37 +57,42 @@ public class AdminDAO implements IAdminDAO {
 			conn = DBUtils.getConnection();
 			st = conn.prepareStatement(DBConstants.REMOVE_COURSE_FROM_CATALOG);
 			st.setString(1, courseCode);
-			st.executeUpdate();
+			int row = st.executeUpdate();
+
+			if (row == 0) {
+				throw new CourseNotFoundException(courseCode);
+			}
+
 		} catch (SQLException se) {
 			se.printStackTrace();
 		}
 	}
 
-	public void assignProfessorToCourse(String professorid, String courseCode) throws CourseNotFoundException {
-		Connection conn = null;
+	@Override
+	public void assignProfessorToCourse(String professorid, String courseCode) throws CourseNotAssignedException {
+		Connection conn = DBUtils.getConnection();
 		PreparedStatement st = null;
 		PreparedStatement st_course = null;
 		try {
-			conn = DBUtils.getConnection();
-
 			st = conn.prepareStatement(DBConstants.UPDATE_COURSE_OF_PROFESSOR);
 			st.setString(1, courseCode);
 			st.setString(2, professorid);
 			st.executeUpdate();
-			st.close();
 
 			st_course = conn.prepareStatement(DBConstants.UPDATE_PROFESSOR_IN_CATALOG);
 			st_course.setString(1, professorid);
 			st_course.setString(2, courseCode);
 			st_course.close();
 
-			conn.close();
+			st.close();
 		} catch (SQLException se) {
-			se.printStackTrace();
+			// ! NEEDS TO FIND A BETTER WAY
+			throw new CourseNotAssignedException();
 		}
 	}
 
-	public Course viewCourseDetails(String courseCode) throws CourseNotFoundException {
+	@Override
+	public Course getCourseDetails(String courseCode) throws CourseNotFoundException {
 		Course course = new Course();
 		Connection conn = null;
 		PreparedStatement st = null;
@@ -102,13 +111,12 @@ public class AdminDAO implements IAdminDAO {
 			}
 		} catch (SQLException se) {
 			se.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		return course;
 	}
 
-	public List<Course> viewCourses() {
+	@Override
+	public List<Course> getCourses() {
 		List<Course> cs = new ArrayList<Course>();
 		Connection conn = null;
 		PreparedStatement st = null;
@@ -128,12 +136,11 @@ public class AdminDAO implements IAdminDAO {
 			}
 		} catch (SQLException se) {
 			se.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		return cs;
 	}
 
+	@Override
 	public List<Student> getUnapprovedStudents() {
 		List<Student> students = new ArrayList<Student>();
 
@@ -147,11 +154,11 @@ public class AdminDAO implements IAdminDAO {
 			ResultSet rs = st.executeQuery();
 
 			while (rs.next()) {
-				Student s = new Student();
-				s.setUserId(rs.getString("userid"));
-				s.setStudentId(rs.getString("studentid"));
-				s.setName(rs.getString("studentnname"));
-				students.add(s);
+				Student student = new Student();
+				student.setStudentId(rs.getString("studentid"));
+				student.setStudentName(rs.getString("studentname"));
+				student.setBranch(rs.getString("branch"));
+				students.add(student);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -160,6 +167,7 @@ public class AdminDAO implements IAdminDAO {
 		return students;
 	}
 
+	@Override
 	public void approveAllStudents() {
 		Connection conn = null;
 		PreparedStatement st = null;
@@ -173,6 +181,7 @@ public class AdminDAO implements IAdminDAO {
 		}
 	}
 
+	@Override
 	public void approveStudentById(String studentId) throws UserNotFoundException {
 		Connection conn = null;
 		PreparedStatement st = null;
@@ -192,6 +201,7 @@ public class AdminDAO implements IAdminDAO {
 		}
 	}
 
+	@Override
 	public List<Admin> getAdmins() {
 		List<Admin> admins = new ArrayList<Admin>();
 		Connection conn = null;
@@ -205,7 +215,7 @@ public class AdminDAO implements IAdminDAO {
 			while (rs.next()) {
 				Admin admin = new Admin();
 				admin.setUserId(rs.getString("adminid"));
-				admin.setName(rs.getString("adminname"));
+				admin.setUsername(rs.getString("adminname"));
 				admins.add(admin);
 			}
 		} catch (SQLException s) {
@@ -214,32 +224,31 @@ public class AdminDAO implements IAdminDAO {
 		return admins;
 	}
 
-	public List<Professor> getProfessors() throws ProfessorNotFoundException {
+	@Override
+	public List<Professor> getProfessors() {
 		List<Professor> professors = new ArrayList<Professor>();
-		Connection conn = null;
-		PreparedStatement st = null;
+		Connection conn = DBUtils.getConnection();
 
-		try {
-			conn = DBUtils.getConnection();
-			st = conn.prepareStatement(DBConstants.VIEW_PROFESSORS);
+		try (PreparedStatement st = conn.prepareStatement(DBConstants.VIEW_PROFESSORS)) {
 			ResultSet rs = st.executeQuery();
 
 			while (rs.next()) {
 				Professor professor = new Professor();
 				professor.setUserId(rs.getString("professorid"));
-				professor.setName(rs.getString("professorname"));
+				professor.setUsername(rs.getString("professorname"));
 				professor.setDesignation(rs.getString("designation"));
 				professor.setDepartment(rs.getString("department"));
 				professor.setCourse(rs.getString("course"));
 				professors.add(professor);
-
 			}
+
 		} catch (SQLException se) {
 			se.printStackTrace();
 		}
 		return professors;
 	}
 
+	@Override
 	public double calculateCpi(String studentId) throws UserNotFoundException {
 
 		String grade;
@@ -287,12 +296,59 @@ public class AdminDAO implements IAdminDAO {
 
 	@Override
 	public void generateReportCard(String studentId) throws UserNotFoundException {
-		AdminDAO adminDao = new AdminDAO();
+		System.out.println("Generating report card");
+		// TODO Generate Report card
+	}
 
-		try {
-			adminDao.generateReportCard(studentId);
-		} catch (UserNotFoundException e) {
-			System.err.printf(e.getMessage());
+	@Override
+	public void addAdmin(Admin admin) throws UserAlreadyExistsException {
+		Connection conn = DBUtils.getConnection();
+
+		try (PreparedStatement stmtRegisterUser = conn.prepareStatement(DBConstants.REGISTER_USER);
+				PreparedStatement stmtRegisterAdmin = conn.prepareStatement(DBConstants.REGISTER_ADMIN);) {
+			stmtRegisterUser.setString(1, admin.getUserId());
+			stmtRegisterUser.setString(2, admin.getUsername());
+			stmtRegisterUser.setString(3, admin.getPassword());
+			stmtRegisterUser.setString(4, admin.getAddress());
+			stmtRegisterUser.setDate(5, Date.valueOf(admin.getDOJ()));
+			stmtRegisterUser.setInt(6, admin.getRoleid());
+
+			stmtRegisterUser.execute();
+
+			stmtRegisterAdmin.setString(1, admin.getUserId());
+			stmtRegisterAdmin.setString(2, admin.getUsername());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void addProfessor(Professor professor) throws ProfessorNotFoundException, UserAlreadyExistsException {
+
+		Connection conn = DBUtils.getConnection();
+
+		try (PreparedStatement stmtRegisterUser = conn.prepareStatement(DBConstants.REGISTER_USER);
+				PreparedStatement stmtRegisterProfessor = conn.prepareStatement(DBConstants.REGISTER_PROFESSOR)) {
+
+			stmtRegisterUser.setString(1, professor.getUserId());
+			stmtRegisterUser.setString(2, professor.getUsername());
+			stmtRegisterUser.setString(3, professor.getPassword());
+			stmtRegisterUser.setString(4, professor.getAddress());
+			stmtRegisterUser.setDate(5, Date.valueOf(professor.getDOJ()));
+			stmtRegisterUser.setInt(6, professor.getRole());
+
+			stmtRegisterUser.execute();
+
+			stmtRegisterProfessor.setString(1, professor.getUserId());
+			stmtRegisterProfessor.setString(2, professor.getUsername());
+			stmtRegisterProfessor.setString(3, professor.getDepartment());
+			stmtRegisterProfessor.setString(4, professor.getDesignation());
+			stmtRegisterProfessor.setString(5, null);
+
+			stmtRegisterProfessor.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 

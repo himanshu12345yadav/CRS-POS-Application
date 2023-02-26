@@ -1,9 +1,8 @@
 package com.signify.bean;
 
 public class Student extends User {
-	private int age , isApproved;
-	private String studentId , branch, batch, name, address, doj, bloodgroup, fName, phNum;
-
+	private int age, isApproved;
+	private String studentId, branch, batch, studentName, bloodgroup, fName, phNum;
 
 	public Student() {
 		super();
@@ -13,47 +12,28 @@ public class Student extends User {
 		super(userId, username);
 	}
 
-	public Student(String userId, String username, String name, String password, String address, String branch,
-			String doj, int age, String bg, String fName, String phNum, int isApproved) {
-		super(userId, username);
-		this.name = name;
-		this.address = address;
+	public Student(String studentId, String studentName, String branch,
+			int age, String bg, String fName, String phNum, int isApproved) {
+		this.studentName = studentName;
 		this.branch = branch;
-		this.doj = doj;
-		this.setAge(age);
+		this.age = age;
 		this.bloodgroup = bg;
 		this.fName = fName;
 		this.phNum = phNum;
 		this.isApproved = isApproved;
-		super.setPassword(password);
+		this.studentId = studentId;
 	}
 
 	public int isApproved() {
 		return isApproved;
 	}
 
-	public String getName() {
-		return name;
+	public String getStudentName() {
+		return studentName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	public String getDoj() {
-		return doj;
-	}
-
-	public void setDoj(String doj) {
-		this.doj = doj;
+	public void setStudentName(String studentName) {
+		this.studentName = studentName;
 	}
 
 	public String getBloodGroup() {

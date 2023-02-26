@@ -16,7 +16,7 @@ public class DBConstants {
 	public static String REGISTER_STUDENT = "insert into student(userid , studentid , studentname , branch , age , bloodgroup , fname , phnum , isapproved , numcourses , semester) values(?,?,?,?,?,?,?,?,?,?,?)";
 	public static String GET_STUDENT_GRADES = "select rc.coursecode as coursecode, cat.coursename as coursename, rc.grade from registeredcourse rc inner join  catalog cat on cat.coursecode = rc.courseCode where rc.studentId = ? and rc.type = 1";
 	public static final String REGISTER_PROFESSOR = "insert into professor values(?,?,?,?,?)";
-	public static final String GET_UNAPPROVED_STUDENTS = "select u.userid as userid, u.username as username from user u inner join Student s on u.userid = s.userid where s.isapproved=?";
+	public static final String GET_UNAPPROVED_STUDENTS = "select * from user u inner join Student s on u.userid = s.userid where s.isapproved=?";
 
 	// Admin Queries
 	public static final String REGISTER_ADMIN = "insert into admin values(? , ?)";

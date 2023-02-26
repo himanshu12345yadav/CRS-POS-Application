@@ -6,6 +6,7 @@ import com.signify.bean.Admin;
 import com.signify.bean.Course;
 import com.signify.bean.Professor;
 import com.signify.bean.Student;
+import com.signify.exception.CourseNotAssignedException;
 import com.signify.exception.CourseNotFoundException;
 import com.signify.exception.ProfessorNotFoundException;
 import com.signify.exception.UserAlreadyExistsException;
@@ -24,36 +25,22 @@ public class AdminService extends UserService implements AdminInterface {
 	}
 
 	@Override
-	public void addCourse(Course course) {
+	public void addCourse(Course course) throws CourseNotAssignedException {
 		AdminDAO adminDao = new AdminDAO();
-
-		try {
-			adminDao.addCourse(course);
-		} catch (Exception e) {
-			System.err.printf(e.getMessage());
-		}
+		adminDao.addCourse(course);
 	}
 
 	@Override
-	public void removeCourse(String courseCode) {
+	public void removeCourse(String courseCode) throws CourseNotFoundException {
 		AdminDAO adminDao = new AdminDAO();
 
-		try {
-			adminDao.removeCourse(courseCode);
-		} catch (CourseNotFoundException e) {
-			System.err.printf(e.getMessage());
-		}
+		adminDao.removeCourse(courseCode);
 	}
 
 	@Override
-	public void assignProfessorToCourse(String professorId, String courseCode) {
+	public void assignProfessorToCourse(String professorId, String courseCode) throws CourseNotAssignedException {
 		AdminDAO adminDao = new AdminDAO();
-
-		try {
-			adminDao.assignProfessorToCourse(professorId, courseCode);
-		} catch (CourseNotFoundException e) {
-			System.err.printf(e.getMessage());
-		}
+		adminDao.assignProfessorToCourse(professorId, courseCode);
 	}
 
 	@Override
@@ -61,7 +48,7 @@ public class AdminService extends UserService implements AdminInterface {
 		AdminDAO adminDao = new AdminDAO();
 		Course course = null;
 		try {
-			course = adminDao.viewCourseDetails(courseCode);
+			course = adminDao.getCourseDetails(courseCode);
 		} catch (CourseNotFoundException e) {
 			System.err.printf(e.getMessage());
 		}
@@ -87,9 +74,6 @@ public class AdminService extends UserService implements AdminInterface {
 
 		students = ad.getUnapprovedStudents();
 
-		if (students == null) {
-			System.err.println("[info]: No Unapproved Student found");
-		}
 		return students;
 	}
 
@@ -100,15 +84,9 @@ public class AdminService extends UserService implements AdminInterface {
 	}
 
 	@Override
-	public List<Professor> viewProfessors() {
+	public List<Professor> getProfessors() {
 		AdminDAO ad = new AdminDAO();
-		List<Professor> professors = null;
-		try {
-			professors = ad.getProfessors();
-		} catch (ProfessorNotFoundException e) {
-			System.out.println(e.getMessage());
-		}
-		return professors;
+		return ad.getProfessors();
 	}
 
 	@Override
@@ -118,15 +96,9 @@ public class AdminService extends UserService implements AdminInterface {
 	}
 
 	@Override
-	public List<Admin> viewAdmins() {
+	public List<Admin> getAdmins() {
 		AdminDAO ad = new AdminDAO();
-		List<Admin> admins = null;
-		try {
-			admins = ad.getAdmins();
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-		return admins;
+		return ad.getAdmins();
 	}
 
 	@Override
@@ -140,12 +112,9 @@ public class AdminService extends UserService implements AdminInterface {
 	}
 
 	@Override
-	public void approveStudentById(String studentId) {
+	public void approveStudentById(String studentId) throws UserNotFoundException {
 		AdminDAO ad = new AdminDAO();
-		try {
-			ad.approveStudentById(studentId);
-		} catch (UserNotFoundException e) {
-			System.out.println(e.getMessage());
-		}
+
+		ad.approveStudentById(studentId);
 	}
 }

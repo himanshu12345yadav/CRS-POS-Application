@@ -33,7 +33,7 @@ public class CRSStudentMenu {
 		do {
 			System.out.println(prompt);
 			try {
-				input = sc.nextInt();
+				input = Integer.parseInt(sc.nextLine());
 			} catch (InputMismatchException e) {
 				System.out.println("Invalid Input");
 			}
@@ -51,7 +51,7 @@ public class CRSStudentMenu {
 				case 2:
 					List<RegisteredCourse> courses = svc.getGrades(studentId);
 					// ! ADD CPI AT THE END OF THE GRADES
-					if (courses == null) {
+					if (courses.size() == 0) {
 						System.out.printf("%n[info] : No Course Found%n");
 						break;
 					} else {
@@ -68,7 +68,7 @@ public class CRSStudentMenu {
 				case 3:
 					List<RegisteredCourse> regCourses = svc.getRegisteredCourses(studentId);
 
-					if (regCourses == null) {
+					if (regCourses.size() == 0) {
 						System.out.println("You have not registered for any course");
 					} else {
 						System.out.printf("----------------%Registered Course------------%n");
@@ -139,6 +139,9 @@ public class CRSStudentMenu {
 					} else if (payment instanceof OfflinePayment) {
 						svc.payFeesOffline((OfflinePayment) payment);
 					}
+				case 7:
+					UserSession.clearSession();
+					return;
 				default:
 					break;
 			}

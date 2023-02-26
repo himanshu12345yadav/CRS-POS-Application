@@ -6,8 +6,12 @@ import com.signify.bean.Admin;
 import com.signify.bean.Professor;
 import com.signify.bean.Student;
 import com.signify.bean.User;
+import com.signify.exception.StudentNotApprovedException;
+import com.signify.exception.StudentNotRegisteredException;
 import com.signify.exception.UserAlreadyExistsException;
+import com.signify.exception.UserNotFoundException;
 import com.signify.reader.UserRegistration;
+import com.signify.service.StudentService;
 import com.signify.service.UserService;
 
 public class CRSApplicationMenu {
@@ -23,11 +27,30 @@ public class CRSApplicationMenu {
 			String password = sc.nextLine();
 
 			UserService svc = new UserService();
+			User usr = null;
 
-			User usr = svc.login(username, password);
+			try {
+				usr = svc.login(username, password);
+			} catch (UserNotFoundException e) {
+				System.err.printf("[error] : %s", e.getMessage());
+				return;
+			}
 
 			if (usr != null) {
 				if (usr instanceof Student) {
+					StudentService service = new StudentService();
+					boolean approvalStatus = false;
+					try {
+						approvalStatus = service.getApprovedStatus(((Student) usr).getStudentId());
+					} catch (StudentNotApprovedException e) {
+						System.err.println(e.getMessage());
+						return;
+					}
+
+					if (!approvalStatus) {
+						System.err.println("[info] : Ask Admin for Approval");
+						return;
+					}
 					CRSStudentMenu stMenu = new CRSStudentMenu();
 					stMenu.displayStudentMenu();
 				} else if (usr instanceof Admin) {
@@ -50,7 +73,7 @@ public class CRSApplicationMenu {
 
 		try {
 			svc.register(usr);
-			System.out.println("[info] : User Registered Successfully");
+			System.out.println("\n[info] : User Registered Successfully");
 		} catch (UserAlreadyExistsException e) {
 			System.out.println(e.getMessage());
 		}
@@ -76,7 +99,7 @@ public class CRSApplicationMenu {
 		CRSApplicationMenu crs = new CRSApplicationMenu();
 		do {
 			System.out.println(prompt);
-			String type = sc.next();
+			String type = sc.nextLine();
 
 			switch (type) {
 				case "1":

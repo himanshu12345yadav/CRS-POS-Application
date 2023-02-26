@@ -3,8 +3,11 @@
  */
 package com.signify.reader;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.Scanner;
 import java.util.UUID;
 
@@ -41,9 +44,14 @@ public class UserRegistration {
 		String userid = UUID.randomUUID().toString();
 		String studentid = UUID.randomUUID().toString();
 
-		Student student = new Student(userid, studentid, name, password, address, branch, doj, age, bg, fName, phNum,
+		Student student = new Student(studentid, name, branch, age, bg, fName, phNum,
 				0);
-
+		student.setUserId(userid);
+		student.setAddress(address);
+		student.setDOJ(doj);
+		student.setUsername(name);
+		student.setPassword(password);
+		student.setRoleId(DBConstants.STUDENT_ROLE_ID);
 		return student;
 	}
 
@@ -51,15 +59,27 @@ public class UserRegistration {
 		Scanner sc = new Scanner(System.in);
 
 		System.out.print("Enter Name : ");
-		String name = sc.next();
+		String name = sc.nextLine();
 		System.out.print("Enter Password : ");
-		String password = sc.next();
+		String password = sc.nextLine();
 		System.out.print("Enter Address : ");
-		String address = sc.next();
-		System.out.print("Enter Date of joining (YYYY-MM-DD) or press 1 for Today");
-		int date = Integer.parseInt(sc.nextLine());
+		String address = sc.nextLine();
+
+		System.out.print("Enter Date of joining (YYYY-MM-DD) or press 1 for Today : ");
+		String dateFormat = sc.nextLine();
+		String doj = "";
+
+		if (dateFormat.equals("1")) {
+			doj = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		} else {
+			try {
+				doj = (new SimpleDateFormat("yyyy-MM-dd")).parse(doj).toString();
+			} catch (ParseException e) {
+				System.err.println("Wrong date format provided , hence taking today");
+			}
+		}
+
 		// ! Handle Date inputs
-		String doj = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 		String userid = UUID.randomUUID().toString();
 
 		if (roleid == DBConstants.ADMIN_ROLE_ID) {
@@ -71,13 +91,13 @@ public class UserRegistration {
 
 			return admin;
 		} else if (roleid == DBConstants.PROFESSOR_ROLE_ID) {
-			System.out.println("Enter Department");
+			System.out.print("Enter Department : ");
 			String department = sc.nextLine();
-			System.out.println("Enter Designation");
+			System.out.print("Enter Designation : ");
 			String designation = sc.nextLine();
 
 			Professor prof = new Professor(userid, name);
-			prof.setRoleid(DBConstants.ADMIN_ROLE_ID);
+			prof.setRoleid(DBConstants.PROFESSOR_ROLE_ID);
 			prof.setPassword(password);
 			prof.setAddress(address);
 			prof.setDepartment(department);

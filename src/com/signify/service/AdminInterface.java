@@ -6,31 +6,35 @@ import com.signify.bean.Admin;
 import com.signify.bean.Course;
 import com.signify.bean.Professor;
 import com.signify.bean.Student;
+import com.signify.exception.CourseNotAssignedException;
+import com.signify.exception.CourseNotFoundException;
+import com.signify.exception.ProfessorNotFoundException;
 import com.signify.exception.UserAlreadyExistsException;
+import com.signify.exception.UserNotFoundException;
 
 public interface AdminInterface {
 
-	public void addCourse(Course course);
+	public void addCourse(Course course) throws CourseNotAssignedException;
 
-	public void removeCourse(String courseCode);
+	public void removeCourse(String courseCode) throws CourseNotFoundException;
 
 	public Course getCourseDetails(String courseCode);
 
 	public void addProfessor(Professor p) throws UserAlreadyExistsException;
 
-	public void assignProfessorToCourse(String professorid, String courseCode);
+	public void assignProfessorToCourse(String professorid, String courseCode) throws CourseNotFoundException, CourseNotAssignedException;
 
-	public List<Professor> viewProfessors();
+	public List<Professor> getProfessors() throws ProfessorNotFoundException;
 
 	public void addAdmin(Admin a) throws UserAlreadyExistsException;
 
-	public List<Admin> viewAdmins();
+	public List<Admin> getAdmins();
 
 	public List<Student> getUnapprovedStudents();
 
 	public void approveAllStudents();
 
-	public void approveStudentById(String studentId);
+	public void approveStudentById(String studentId) throws UserNotFoundException;
 
 	public double calculateCpi(String studentId);
 

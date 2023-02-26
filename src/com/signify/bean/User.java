@@ -1,8 +1,9 @@
 package com.signify.bean;
 
 public class User {
-	private String userId, username, password, name, address, doj;
+	private String userId, username, password, address, doj;
 	private int roleid;
+	// ! check if username and name handled seperately
 
 	public User() {
 	}
@@ -13,11 +14,11 @@ public class User {
 		this.username = username;
 	}
 
-	public User(String userid, String name, String password, String address, int roleid) {
+	public User(String userid, String username, String password, String address, int roleid) {
 		super();
 		this.userId = userid;
-		this.name = name;
 		this.password = password;
+		this.username = username;
 		this.address = address;
 		this.setRoleid(roleid);
 	}
@@ -52,14 +53,6 @@ public class User {
 
 	public void setUserId(String userId) {
 		this.userId = userId;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public String getAddress() {

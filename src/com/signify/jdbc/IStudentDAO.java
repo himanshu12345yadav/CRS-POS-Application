@@ -10,6 +10,7 @@ import com.signify.bean.Student;
 import com.signify.exception.CourseLimitExceedException;
 import com.signify.exception.CourseNotFoundException;
 import com.signify.exception.SemesterNotRegisteredException;
+import com.signify.exception.StudentNotApprovedException;
 import com.signify.exception.StudentNotRegisteredException;
 
 public interface IStudentDAO {
@@ -19,7 +20,7 @@ public interface IStudentDAO {
 
 	public String getStudentId(String userId);
 
-	public boolean getApprovalStatus(String studentId) throws StudentNotRegisteredException;
+	public boolean getApprovalStatus(String studentId) throws StudentNotApprovedException;
 
 	public List<Course> getAvailableCourses(String studentId)
 			throws StudentNotRegisteredException, SemesterNotRegisteredException;

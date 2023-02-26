@@ -16,6 +16,7 @@ import com.signify.constants.DBConstants;
 import com.signify.exception.CourseLimitExceedException;
 import com.signify.exception.CourseNotFoundException;
 import com.signify.exception.SemesterNotRegisteredException;
+import com.signify.exception.StudentNotApprovedException;
 import com.signify.exception.StudentNotRegisteredException;
 import com.signify.utils.DBUtils;
 
@@ -67,7 +68,7 @@ public class StudentDAO implements IStudentDAO {
 	}
 
 	@Override
-	public boolean getApprovalStatus(String studentId) throws StudentNotRegisteredException {
+	public boolean getApprovalStatus(String studentId) throws StudentNotApprovedException {
 		Connection conn = DBUtils.getConnection();
 		boolean isapproved = false;
 
@@ -77,7 +78,7 @@ public class StudentDAO implements IStudentDAO {
 			ResultSet rs = stmtGetApprovalStatus.executeQuery();
 
 			if (!rs.next()) {
-				throw new StudentNotRegisteredException(studentId);
+				throw new StudentNotApprovedException(studentId);
 			}
 			while (rs.next()) {
 				isapproved = rs.getInt(1) == 1 ? true : false;

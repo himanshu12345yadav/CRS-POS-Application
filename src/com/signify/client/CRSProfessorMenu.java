@@ -18,30 +18,30 @@ public class CRSProfessorMenu {
 
 		do {
 			System.out.println(prompt);
-			input = sc.nextInt();
+			input = Integer.parseInt(sc.nextLine());
 
 			switch (input) {
-			case 1:
-				System.out.println("Enter course id ");
-				String courseId = sc.nextLine();
-				profService.getEnrolledStudents(courseId);
-				break;
-			case 2:
-				System.out.println("Enter Student Id : ");
-				String studentId = sc.nextLine();
-				System.out.println("Enter Course Code : ");
-				String courseCode = sc.nextLine();
-				System.out.println("Enter Grade");
-				String grade = sc.nextLine();
-				profService.addGrade(studentId, courseCode, grade);
-				break;
-			case 3:
-				UserSession.user = null;
-				flag = false;
-				return;
-			default:
-				System.out.println("Wrong input : Try again");
-				break;
+				case 1:
+					System.out.println("Enter course id ");
+					String courseId = sc.nextLine();
+					profService.getEnrolledStudents(courseId);
+					break;
+				case 2:
+					System.out.println("Enter Student Id : ");
+					String studentId = sc.nextLine();
+					System.out.println("Enter Course Code : ");
+					String courseCode = sc.nextLine();
+					System.out.println("Enter Grade");
+					String grade = sc.nextLine();
+					profService.addGrade(studentId, courseCode, grade);
+					break;
+				case 3:
+					UserSession.user = null;
+					flag = false;
+					return;
+				default:
+					System.out.println("Wrong input : Try again");
+					break;
 			}
 		} while (flag);
 	}
