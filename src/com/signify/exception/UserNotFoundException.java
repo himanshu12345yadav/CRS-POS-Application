@@ -9,6 +9,6 @@ public class UserNotFoundException extends Exception {
 
 	@Override
 	public String getMessage() {
-		return message;
+		return "Invalid Username or password";
 	}
 }

@@ -9,6 +9,6 @@ public class CourseNotFoundException extends Exception {
 
 	@Override
 	public String getMessage() {
-		return "Invalid Username or Password";
+		return "Invalid Course Code";
 	}
 }

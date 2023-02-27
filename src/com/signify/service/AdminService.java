@@ -8,6 +8,7 @@ import com.signify.bean.Professor;
 import com.signify.bean.Student;
 import com.signify.exception.CourseNotAssignedException;
 import com.signify.exception.CourseNotFoundException;
+import com.signify.exception.CourseNotRegisteredException;
 import com.signify.exception.ProfessorNotFoundException;
 import com.signify.exception.UserAlreadyExistsException;
 import com.signify.exception.UserNotFoundException;
@@ -44,27 +45,17 @@ public class AdminService extends UserService implements AdminInterface {
 	}
 
 	@Override
-	public Course getCourseDetails(String courseCode) {
+	public Course getCourseDetails(String courseCode) throws CourseNotFoundException {
 		AdminDAO adminDao = new AdminDAO();
-		Course course = null;
-		try {
-			course = adminDao.getCourseDetails(courseCode);
-		} catch (CourseNotFoundException e) {
-			System.err.printf(e.getMessage());
-		}
-		return course;
+		return adminDao.getCourseDetails(courseCode);
 	}
 
 	@Override
-	public double calculateCpi(String studentId) {
+	public double calculateCpi(String studentId) throws UserNotFoundException, CourseNotRegisteredException {
 		AdminDAO adminDao = new AdminDAO();
 
-		try {
-			adminDao.calculateCpi(studentId);
-		} catch (UserNotFoundException e) {
-			System.err.printf(e.getMessage());
-		}
-		return 0;
+		return adminDao.calculateCpi(studentId);
+
 	}
 
 	@Override

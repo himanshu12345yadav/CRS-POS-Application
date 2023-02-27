@@ -11,6 +11,7 @@ import com.signify.bean.Payment;
 import com.signify.bean.RegisteredCourse;
 import com.signify.bean.Student;
 import com.signify.collection.UserSession;
+import com.signify.exception.CourseLimitExceedException;
 import com.signify.exception.CourseNotFoundException;
 import com.signify.exception.SemesterNotRegisteredException;
 import com.signify.exception.StudentNotRegisteredException;
@@ -44,8 +45,9 @@ public class CRSStudentMenu {
 					int semester = Integer.parseInt(sc.nextLine());
 					try {
 						svc.semesterRegister(studentId, semester);
+						System.out.println("\n[info] : Semester Registered Successfully");
 					} catch (StudentNotRegisteredException e) {
-						System.err.println("[error] : Student Not Registered");
+						System.err.println("\n[error] : Student Not Registered");
 					}
 					break;
 				case 2:
@@ -56,7 +58,7 @@ public class CRSStudentMenu {
 						break;
 					} else {
 						System.out.printf("----------------%nReport Card------------%n");
-						System.out.printf("|Course Code%-50s|Course Name %-50s| Course Grade %-50s|%n");
+						System.out.printf("|Course Code|Course Name| Course Grade|%n");
 
 						for (RegisteredCourse course : courses) {
 							System.out.printf("|%-50s|%-50s|%-50s%n", course.getCourseCode(), course.getCourseName(),
@@ -65,6 +67,7 @@ public class CRSStudentMenu {
 
 						System.out.printf("----------------------------%n");
 					}
+					break;
 				case 3:
 					List<RegisteredCourse> regCourses = svc.getRegisteredCourses(studentId);
 
@@ -80,6 +83,7 @@ public class CRSStudentMenu {
 									course.getSemester(), course.getType());
 						}
 					}
+					break;
 				case 4:
 					// ! ADD MAXIMUM SEATS LIMIT TO A COURSE
 					List<Course> availableCourse = null;
@@ -90,15 +94,28 @@ public class CRSStudentMenu {
 						break;
 					}
 
-					System.out.printf("----------------%nReport Card------------%n");
-					System.out.printf("|Course Code%-50s|Course Name %-50s| Course Grade %-50s|%n");
+					System.out.printf("----------------%nAvailable Courses------------%n");
+					System.out.printf("|Course Code|Course Name| Course Instructor|%n");
 
 					for (Course course : availableCourse) {
-						System.out.printf("|%-50s|%-50s|%-50s%n", course.getCourseCode(), course.getCourseName(),
+						System.out.printf("|%-10s|%-10s|%-10s%n", course.getCourseCode(), course.getCourseName(),
 								course.getInstructor());
 					}
-
 					System.out.printf("----------------------------%n");
+
+					System.out.print("Enter Course code : ");
+					String coursecode = sc.nextLine();
+					System.out.print("Enter Course type [1/2] : ");
+					int coursetype = Integer.parseInt(sc.nextLine());
+
+					try {
+						svc.addCourse(studentId, coursecode, coursetype);
+						System.out.println("\n[info] : Registered Successfully for the course");
+					} catch (CourseNotFoundException | CourseLimitExceedException e) {
+						System.err.println(e.getMessage());
+					}
+
+					break;
 				case 5: {
 				}
 					List<RegisteredCourse> rc = svc.getRegisteredCourses(studentId);
@@ -108,14 +125,14 @@ public class CRSStudentMenu {
 						break;
 					}
 
-					System.out.printf("----------------%nReport Card------------%n");
-					System.out.printf("|Course Code%-50s|Course Name %-50s| Course Grade %-50s|%n");
+					System.out.printf("----------------Registered Courses------------%n");
+					System.out.printf("|Course Code|Course Name| Course Grade|%n");
 					for (RegisteredCourse course : rc) {
-						System.out.printf("|Course Code%-50s|Course Name %-50s| Semester %-50s|%n",
+						System.out.printf("|%-10s|%-10s|%-10s|%n",
 								course.getCourseCode(), course.getCourseName(), course.getSemester());
 					}
 
-					System.out.printf("%nEnter Course Code%n");
+					System.out.print("%nEnter Course Code :");
 					String courseCode = sc.nextLine();
 					try {
 						svc.dropCourse(studentId, courseCode);
@@ -123,13 +140,14 @@ public class CRSStudentMenu {
 					} catch (CourseNotFoundException e) {
 						System.out.println(e.getMessage());
 					}
+					break;
 				case 6:
 					List<Course> coursesfees = svc.getFees(studentId);
 					double totalFee = 0;
 					for (Course course : coursesfees) {
 						totalFee += course.getFee();
 					}
-					System.out.printf("%n Total Fee to be paid %f %n", totalFee);
+					System.out.printf("%nTotal Fee to be paid %f %n", totalFee);
 
 					StudentPayment studentPayment = new StudentPayment();
 					Payment payment = studentPayment.requestPayment(totalFee);
@@ -139,6 +157,9 @@ public class CRSStudentMenu {
 					} else if (payment instanceof OfflinePayment) {
 						svc.payFeesOffline((OfflinePayment) payment);
 					}
+
+					System.out.println("Fee Paid Successfully");
+					break;
 				case 7:
 					UserSession.clearSession();
 					return;

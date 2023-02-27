@@ -21,28 +21,40 @@ public class UserDAO implements IUserDAO {
 
 	@Override
 	public User login(String username, String password) throws UserNotFoundException {
-		Connection conn;
-		PreparedStatement st;
+		Connection conn = DBUtils.getConnection();
+		PreparedStatement st, st_student;
 		User usr = null;
 		try {
-			conn = DBUtils.getConnection();
 			st = conn.prepareStatement(DBConstants.GET_USER);
 			st.setString(1, username);
 			st.setString(2, password);
 			ResultSet rs = st.executeQuery();
 
-			if (!rs.next()) {
-				throw new UserNotFoundException("Invalid UserName or Password");
+			if (rs.next() == true) {
+				do {
+					int roleid = rs.getInt("roleid");
+					if (roleid == DBConstants.ADMIN_ROLE_ID) {
+						usr = new Admin(rs.getString("userid"), rs.getString("username"));
+					} else if (roleid == DBConstants.PROFESSOR_ROLE_ID) {
+						usr = new Professor(rs.getString("userid"), rs.getString("username"));
+					} else if (roleid == DBConstants.STUDENT_ROLE_ID) {
+						Student student = new Student(rs.getString("userid"), rs.getString("username"));
+
+						st_student = conn.prepareStatement(DBConstants.GET_STUDENT);
+						st_student.setString(1, username);
+						st_student.setString(2, password);
+						ResultSet rs_student = st_student.executeQuery();
+
+						while (rs_student.next()) {
+							student.setStudentId(rs_student.getString("studentid"));
+						}
+						usr = student;
+					}
+				} while (rs.next());
 			} else {
-				int roleid = rs.getInt("roleid");
-				if (roleid == DBConstants.ADMIN_ROLE_ID) {
-					usr = new Admin(rs.getString("userid"), rs.getString("username"));
-				} else if (roleid == DBConstants.PROFESSOR_ROLE_ID) {
-					usr = new Professor(rs.getString("userid"), rs.getString("username"));
-				} else if (roleid == DBConstants.STUDENT_ROLE_ID) {
-					usr = new Student(rs.getString("userid"), rs.getString("username"));
-				}
+				throw new UserNotFoundException(username);
 			}
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

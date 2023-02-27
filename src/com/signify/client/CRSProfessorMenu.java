@@ -1,9 +1,11 @@
 package com.signify.client;
 
+import java.util.List;
 import java.util.Scanner;
 
+import com.signify.bean.Professor;
+import com.signify.bean.Student;
 import com.signify.collection.UserSession;
-import com.signify.service.ProfessorInterface;
 import com.signify.service.ProfessorService;
 
 public class CRSProfessorMenu {
@@ -13,8 +15,10 @@ public class CRSProfessorMenu {
 	public void displayProfessorMenu() {
 		boolean flag = true;
 		Scanner sc = new Scanner(System.in);
-		ProfessorInterface profService = new ProfessorService();
+		ProfessorService profService = new ProfessorService();
 		int input;
+		Professor professor = (Professor) UserSession.getUser();
+		String professorId = professor.getUserId();
 
 		do {
 			System.out.println(prompt);
@@ -22,21 +26,23 @@ public class CRSProfessorMenu {
 
 			switch (input) {
 				case 1:
-					System.out.println("Enter course id ");
-					String courseId = sc.nextLine();
-					profService.getEnrolledStudents(courseId);
+					List<Student> students = profService.getEnrolledStudents(professorId);
+					System.out.println("List of Enrolled Students\n-------------------");
+
+					for (Student i : students) {
+						System.out.println(i.getStudentId());
+					}
 					break;
 				case 2:
-					System.out.println("Enter Student Id : ");
+					System.out.print("Enter Student Id : ");
 					String studentId = sc.nextLine();
-					System.out.println("Enter Course Code : ");
-					String courseCode = sc.nextLine();
-					System.out.println("Enter Grade");
+					System.out.print("Enter Grade : ");
 					String grade = sc.nextLine();
-					profService.addGrade(studentId, courseCode, grade);
+					profService.addGrade(professorId, studentId, grade);
+					System.out.println("\nStudent Graded");
 					break;
 				case 3:
-					UserSession.user = null;
+					UserSession.clearSession();
 					flag = false;
 					return;
 				default:

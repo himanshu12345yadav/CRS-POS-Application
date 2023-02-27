@@ -11,6 +11,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.naming.directory.InvalidAttributesException;
+
 import com.signify.bean.Admin;
 import com.signify.bean.Course;
 import com.signify.bean.Professor;
@@ -18,6 +20,7 @@ import com.signify.bean.Student;
 import com.signify.constants.DBConstants;
 import com.signify.exception.CourseNotAssignedException;
 import com.signify.exception.CourseNotFoundException;
+import com.signify.exception.CourseNotRegisteredException;
 import com.signify.exception.ProfessorNotFoundException;
 import com.signify.exception.UserAlreadyExistsException;
 import com.signify.exception.UserNotFoundException;
@@ -36,6 +39,7 @@ public class AdminDAO implements IAdminDAO {
 			st.setString(2, course.getCourseName());
 			st.setString(3, course.getInstructor());
 			st.setDouble(4, course.getFee());
+			st.setDouble(5, course.getSemester());
 			st.executeUpdate();
 
 			st_prof = conn.prepareStatement(DBConstants.UPDATE_PROFESSOR_COURSE);
@@ -103,11 +107,16 @@ public class AdminDAO implements IAdminDAO {
 			st.setString(1, courseCode);
 			ResultSet rs = st.executeQuery();
 
-			while (rs.next()) {
-				course.setCourseCode(rs.getString("coursecode"));
-				course.setCourseName(rs.getString("coursename"));
-				course.setInstructor(rs.getString("instructor"));
-				course.setFee(rs.getDouble("coursefee"));
+			if (rs.next() == true) {
+				do {
+					course.setCourseCode(rs.getString("coursecode"));
+					course.setCourseName(rs.getString("coursename"));
+					course.setInstructor(rs.getString("instructor"));
+					course.setFee(rs.getDouble("coursefee"));
+
+				} while (rs.next());
+			} else {
+				throw new CourseNotFoundException(courseCode);
 			}
 		} catch (SQLException se) {
 			se.printStackTrace();
@@ -249,7 +258,7 @@ public class AdminDAO implements IAdminDAO {
 	}
 
 	@Override
-	public double calculateCpi(String studentId) throws UserNotFoundException {
+	public double calculateCpi(String studentId) throws UserNotFoundException, CourseNotRegisteredException {
 
 		String grade;
 		double cgpa = 0.0, cpi = 0.0;
@@ -263,27 +272,32 @@ public class AdminDAO implements IAdminDAO {
 			st.setString(1, studentId);
 			ResultSet rs = st.executeQuery();
 
-			while (rs.next()) {
-				grade = rs.getString("grade");
-				n++;
-				if (grade.equals("A+"))
-					cgpa += 10.0;
-				else if (grade.equals("A"))
-					cgpa += 9.5;
-				else if (grade.equals("A-"))
-					cgpa += 8.5;
-				else if (grade.equals("B"))
-					cgpa += 8.0;
-				else if (grade.equals("B-"))
-					cgpa += 7.5;
-				else if (grade.equals("C"))
-					cgpa += 7.0;
-				else if (grade.equals("C-"))
-					cgpa += 6.5;
-				else if (grade.equals("D"))
-					cgpa += 6.0;
-				else
-					cgpa += 0;
+			if (rs.next() == true) {
+				do {
+					grade = rs.getString("grade");
+					n++;
+					if (grade.equals("A+"))
+						cgpa += 10.0;
+					else if (grade.equals("A"))
+						cgpa += 9.5;
+					else if (grade.equals("A-"))
+						cgpa += 8.5;
+					else if (grade.equals("B"))
+						cgpa += 8.0;
+					else if (grade.equals("B-"))
+						cgpa += 7.5;
+					else if (grade.equals("C"))
+						cgpa += 7.0;
+					else if (grade.equals("C-"))
+						cgpa += 6.5;
+					else if (grade.equals("D"))
+						cgpa += 6.0;
+					else
+						cgpa += 0;
+
+				} while (rs.next());
+			} else {
+				throw new CourseNotRegisteredException();
 			}
 
 			cpi = cgpa / n;

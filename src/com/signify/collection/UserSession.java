@@ -9,7 +9,7 @@ public class UserSession {
 		return user;
 	}
 
-	public static void setUser(User usr) {
+	public static void setSession(User usr) {
 		user = usr;
 	}
 

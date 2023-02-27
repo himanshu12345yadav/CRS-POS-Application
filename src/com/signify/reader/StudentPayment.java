@@ -10,9 +10,9 @@ import com.signify.bean.Student;
 import com.signify.collection.UserSession;
 
 public class StudentPayment {
-    private String mainPrompt = "%n1. ONLINE PAYMENT%n2. OFFLINE PAYMENT%n";
-    private String onlinePrompt = "%n1. PAY THROUGH CARD%n2. PAY THROUGH NETBANKING 3. GO BACK";
-    private String offlinePrompt = "%n1. PAY THROUGH CASH%n2. PAY THROUGH CHEQUE%n3. GO BACK";
+    private String mainPrompt = "1. ONLINE PAYMENT\n2. OFFLINE PAYMENT\n";
+    private String onlinePrompt = "\n1. PAY THROUGH CARD\n2. PAY THROUGH NETBANKING \n3. GO BACK";
+    private String offlinePrompt = "\n1. PAY THROUGH CASH\n2. PAY THROUGH CHEQUE\n3. GO BACK";
     private String wrongInput = "Wrong Input , Try Again";
 
     public Payment requestPayment(double totalFee) {

@@ -15,7 +15,7 @@ public class UserService implements UserInterface {
 
 	@Override
 	public void logout() {
-		UserSession.user = null;
+		UserSession.clearSession();
 		System.out.println("\n✓ User Logged Out\n_________________________");
 	}
 

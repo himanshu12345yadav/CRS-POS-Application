@@ -8,6 +8,7 @@ import com.signify.bean.Professor;
 import com.signify.bean.Student;
 import com.signify.exception.CourseNotAssignedException;
 import com.signify.exception.CourseNotFoundException;
+import com.signify.exception.CourseNotRegisteredException;
 import com.signify.exception.ProfessorNotFoundException;
 import com.signify.exception.UserAlreadyExistsException;
 import com.signify.exception.UserNotFoundException;
@@ -18,7 +19,7 @@ public interface AdminInterface {
 
 	public void removeCourse(String courseCode) throws CourseNotFoundException;
 
-	public Course getCourseDetails(String courseCode);
+	public Course getCourseDetails(String courseCode) throws CourseNotFoundException;
 
 	public void addProfessor(Professor p) throws UserAlreadyExistsException;
 
@@ -36,7 +37,7 @@ public interface AdminInterface {
 
 	public void approveStudentById(String studentId) throws UserNotFoundException;
 
-	public double calculateCpi(String studentId);
+	public double calculateCpi(String studentId) throws UserNotFoundException, CourseNotRegisteredException;
 
 	public void generateReportCard(String studentId);
 }

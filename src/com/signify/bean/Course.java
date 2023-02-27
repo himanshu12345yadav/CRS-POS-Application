@@ -3,16 +3,34 @@ package com.signify.bean;
 public class Course {
 	private String courseCode, courseName, instructor;
 	private double fee;
+	private int semester, capacity;
 
-	public Course(String courseCode, String courseName, String instructor, double coursefee) {
+	public Course(String courseCode, String courseName, String instructor, double coursefee, int semester) {
 		super();
 		this.courseCode = courseCode;
 		this.courseName = courseName;
 		this.instructor = instructor;
 		this.fee = coursefee;
+		this.semester = semester;
 	}
 
 	public Course() {
+	}
+
+	public int getCapacity() {
+		return capacity;
+	}
+
+	public void setCapacity(int capacity) {
+		this.capacity = capacity;
+	}
+
+	public int getSemester() {
+		return semester;
+	}
+
+	public void setSemester(int semester) {
+		this.semester = semester;
 	}
 
 	public String getCourseCode() {

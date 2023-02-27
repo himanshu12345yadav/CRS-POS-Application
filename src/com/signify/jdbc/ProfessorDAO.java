@@ -17,23 +17,27 @@ public class ProfessorDAO implements IProfessorDAO {
 
 	@Override
 	public List<Student> getEnrolledStudents(String professorId) throws ProfessorNotAssignedException {
-		Connection conn = null;
+		Connection conn = DBUtils.getConnection();
 		List<Student> students = new ArrayList<Student>();
-		conn = DBUtils.getConnection();
 
 		try (PreparedStatement stmtGetCourse = conn.prepareStatement(DBConstants.GET_PROFESSOR_COURSE);
 				PreparedStatement stmtGetStudents = conn.prepareStatement(DBConstants.GET_ENROLLED_STUDENTS)) {
+
 			stmtGetCourse.setString(1, professorId);
 			ResultSet rs = stmtGetCourse.executeQuery();
+			rs.next();
 			rs.getString("course");
 
 			if (rs.wasNull()) {
 				throw new ProfessorNotAssignedException(professorId);
 			}
 
-			while (rs.next()) {
+			stmtGetStudents.setString(1, professorId);
+			ResultSet rsStudents = stmtGetStudents.executeQuery();
+
+			while (rsStudents.next()) {
 				Student st = new Student();
-				st.setStudentId(rs.getString("studentid"));
+				st.setStudentId(rsStudents.getString("studentid"));
 				students.add(st);
 			}
 
@@ -52,14 +56,17 @@ public class ProfessorDAO implements IProfessorDAO {
 		try (PreparedStatement stmtGetProfessorCourse = conn.prepareStatement(DBConstants.GET_PROFESSOR_COURSE);
 				PreparedStatement stmtGradeStudent = conn.prepareStatement(DBConstants.UPDATE_STUDENT_GRADE);) {
 
-			stmtGetProfessorCourse.setString(1, "professorid");
+			stmtGetProfessorCourse.setString(1, professorId);
 			ResultSet rs = stmtGetProfessorCourse.executeQuery();
+			String courseCode = "";
 
-			String courseCode = rs.getString("course");
-
-			if (rs.wasNull()) {
-				throw new ProfessorNotAssignedException(professorId);
+			while (rs.next()) {
+				courseCode = rs.getString("course");
 			}
+
+			// if (rs.wasNull()) {
+			// throw new ProfessorNotAssignedException(professorId);
+			// }
 
 			stmtGradeStudent.setString(1, grade);
 			stmtGradeStudent.setString(2, studentId);

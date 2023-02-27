@@ -6,6 +6,7 @@ import com.signify.bean.Admin;
 import com.signify.bean.Professor;
 import com.signify.bean.Student;
 import com.signify.bean.User;
+import com.signify.collection.UserSession;
 import com.signify.exception.StudentNotApprovedException;
 import com.signify.exception.StudentNotRegisteredException;
 import com.signify.exception.UserAlreadyExistsException;
@@ -37,20 +38,16 @@ public class CRSApplicationMenu {
 			}
 
 			if (usr != null) {
+				UserSession.setSession(usr);
 				if (usr instanceof Student) {
 					StudentService service = new StudentService();
-					boolean approvalStatus = false;
 					try {
-						approvalStatus = service.getApprovedStatus(((Student) usr).getStudentId());
+						service.getApprovedStatus(((Student) usr).getStudentId());
 					} catch (StudentNotApprovedException e) {
 						System.err.println(e.getMessage());
 						return;
 					}
 
-					if (!approvalStatus) {
-						System.err.println("[info] : Ask Admin for Approval");
-						return;
-					}
 					CRSStudentMenu stMenu = new CRSStudentMenu();
 					stMenu.displayStudentMenu();
 				} else if (usr instanceof Admin) {

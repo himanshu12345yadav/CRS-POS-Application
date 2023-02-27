@@ -9,6 +9,6 @@ public class StudentNotApprovedException extends Exception {
 
     @Override
     public String getMessage() {
-        return "Student Not Approved Yet";
+        return "Student Not Approved Yet , Ask admin for Approval";
     }
 }

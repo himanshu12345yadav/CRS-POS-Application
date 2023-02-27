@@ -11,6 +11,7 @@ import com.signify.collection.UserSession;
 import com.signify.constants.DBConstants;
 import com.signify.exception.CourseNotAssignedException;
 import com.signify.exception.CourseNotFoundException;
+import com.signify.exception.CourseNotRegisteredException;
 import com.signify.exception.UserAlreadyExistsException;
 import com.signify.exception.UserNotFoundException;
 import com.signify.reader.UserRegistration;
@@ -108,15 +109,14 @@ public class CRSAdminMenu {
 					System.out.println("Enter Course Instructor : ");
 					String instructor = sc.nextLine();
 					System.out.println("Enter Course Fee :");
-					Double coursefee = sc.nextDouble();
+					Double coursefee = Double.parseDouble(sc.nextLine());
+					System.out.println("Enter Semester : ");
+					int semester = Integer.parseInt(sc.nextLine());
 
-					// TODO : CHECK COURSE SEMESTER IN ADMIN MENU
-					// System.out.println("Enter Semester : ");
-					// int semester = Integer.parseInt(sc.nextLine());
-
-					Course course = new Course(courseCode, courseName, instructor, coursefee);
+					Course course = new Course(courseCode, courseName, instructor, coursefee, semester);
 					try {
 						svc.addCourse(course);
+						System.out.println("\n[info] : Course Added Successfully");
 					} catch (CourseNotAssignedException e) {
 						System.err.println(e.getMessage());
 					}
@@ -124,29 +124,45 @@ public class CRSAdminMenu {
 					break;
 				}
 				case 6: {
-					System.out.println("Enter Course Code : ");
+					System.out.print("Enter Course Code : ");
 					String courseCode = sc.nextLine();
 					try {
 						svc.removeCourse(courseCode);
+						System.out.println("\n[info] : Course removed successfully");
 					} catch (CourseNotFoundException e) {
 						System.out.println(e.getMessage());
 					}
 					break;
 				}
 				case 7:
-					System.out.println("Enter Course Code");
+					System.out.print("Enter Course Code : ");
 					String courseCode = sc.nextLine();
-					Course course = svc.getCourseDetails(courseCode);
+					Course course;
+					try {
+						course = svc.getCourseDetails(courseCode);
+					} catch (CourseNotFoundException e) {
+						System.err.println(e.getMessage());
+						break;
+					}
 
 					if (course != null) {
 						System.out.println("\nCourse Code\tCourse Name\tInstructor\tCourse Fee\tSemester");
-						System.out.printf("%s\t%s\t%s\t%f\t%s", course.getCourseCode(), course.getCourseName(),
+						System.out.printf("%s\t%s\t%s\t%f\t%s%n", course.getCourseCode(), course.getCourseName(),
 								course.getInstructor(), course.getFee(), course.getCourseName());
 					}
+					break;
 				case 8: {
-					System.out.println("Enter Student ID : ");
+					System.out.print("Enter Student ID : ");
 					String studentId = sc.nextLine();
-					svc.calculateCpi(studentId);
+					double cpi = 0;
+					try {
+						svc.calculateCpi(studentId);
+					} catch (UserNotFoundException | CourseNotRegisteredException e) {
+						System.err.println(e.getMessage());
+					}
+
+					System.out.println("Student CPI is " + cpi);
+					break;
 				}
 				case 9:
 					List<Professor> professors;
@@ -154,7 +170,7 @@ public class CRSAdminMenu {
 					professors = svc.getProfessors();
 
 					if (professors.size() == 0) {
-						System.err.println("No Professors found");
+						System.err.println("\nNo Professors found");
 						break;
 					}
 					System.out.printf(
@@ -181,6 +197,7 @@ public class CRSAdminMenu {
 					return;
 				default:
 					System.out.println("Wrong input : Try again");
+					break;
 			}
 		} while (flag);
 	}

@@ -8,6 +8,7 @@ import com.signify.bean.Professor;
 import com.signify.bean.Student;
 import com.signify.exception.CourseNotAssignedException;
 import com.signify.exception.CourseNotFoundException;
+import com.signify.exception.CourseNotRegisteredException;
 import com.signify.exception.ProfessorNotFoundException;
 import com.signify.exception.StudentNotRegisteredException;
 import com.signify.exception.UserAlreadyExistsException;
@@ -38,7 +39,7 @@ public interface IAdminDAO {
 
 	public List<Course> getCourses();
 
-	public double calculateCpi(String studentId) throws UserNotFoundException;
+	public double calculateCpi(String studentId) throws UserNotFoundException, CourseNotRegisteredException;
 
 	public void generateReportCard(String studentId) throws StudentNotRegisteredException, UserNotFoundException;
 }

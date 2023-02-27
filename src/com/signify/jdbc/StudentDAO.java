@@ -77,12 +77,14 @@ public class StudentDAO implements IStudentDAO {
 
 			ResultSet rs = stmtGetApprovalStatus.executeQuery();
 
-			if (!rs.next()) {
+			while (rs.next()) {
+				isapproved = rs.getInt("isapproved") == 1;
+			}
+
+			if (!isapproved) {
 				throw new StudentNotApprovedException(studentId);
 			}
-			while (rs.next()) {
-				isapproved = rs.getInt(1) == 1 ? true : false;
-			}
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -100,25 +102,21 @@ public class StudentDAO implements IStudentDAO {
 			stmtGetStudentID.setString(1, studentId);
 			ResultSet rs = stmtGetStudentID.executeQuery();
 			rs.next();
-
 			if (rs.wasNull()) {
 				throw new SemesterNotRegisteredException(studentId);
 			}
-
 			int semester = rs.getInt("semester");
-
 			while (rs.next()) {
 				studentId = rs.getString("studentid");
 			}
 
 			stmtGetAvailableCourses.setInt(1, semester);
 			ResultSet rsCourses = stmtGetAvailableCourses.executeQuery();
-
 			while (rsCourses.next()) {
 				Course course = new Course();
-				course.setCourseCode(rs.getString("coursecode"));
-				course.setCourseName(rs.getString("coursename"));
-				course.setInstructor(rs.getString("instructor"));
+				course.setCourseCode(rsCourses.getString("coursecode"));
+				course.setCourseName(rsCourses.getString("coursename"));
+				course.setInstructor(rsCourses.getString("instructor"));
 				courses.add(course);
 			}
 		} catch (SQLException e) {
@@ -131,7 +129,24 @@ public class StudentDAO implements IStudentDAO {
 	@Override
 	public void addCourse(String studentId, String courseCode, int type)
 			throws CourseNotFoundException, CourseLimitExceedException {
-		// TODO ADD COURSE LOGIC
+		Connection conn = DBUtils.getConnection();
+
+		try (PreparedStatement stmtAddCourse = conn.prepareStatement(DBConstants.STUDENT_ADD_COURSE)) {
+			stmtAddCourse.setString(1, courseCode);
+			stmtAddCourse.setString(2, studentId);
+			stmtAddCourse.setString(3, "NA");
+			stmtAddCourse.setInt(4, type);
+
+			int queryStatus = stmtAddCourse.executeUpdate();
+
+			if (queryStatus == 0) {
+				throw new CourseNotFoundException(courseCode);
+			}
+
+		} catch (SQLException e) {
+			// ! Handle duplicate entry exception
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -158,9 +173,9 @@ public class StudentDAO implements IStudentDAO {
 		Connection conn = DBUtils.getConnection();
 		List<RegisteredCourse> courses = new ArrayList<RegisteredCourse>();
 
-		try (PreparedStatement getStudentGrades = conn.prepareStatement(studentId)) {
+		try (PreparedStatement getStudentGrades = conn.prepareStatement(DBConstants.GET_STUDENT_GRADES)) {
 			getStudentGrades.setString(1, studentId);
-			ResultSet rs = getStudentGrades.executeQuery(DBConstants.GET_STUDENT_GRADES);
+			ResultSet rs = getStudentGrades.executeQuery();
 			// ! Check this query
 
 			while (rs.next()) {
